@@ -28,12 +28,7 @@ class LeafletMap extends React.Component {
       fadeAnimation: false
     });
 
-    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
-
-    L.mapboxGL({
-        style: `mapbox://styles/${ mapboxLogin }/${ mapboxMapId }`,
-        accessToken: mapboxAccessToken
-    }).addTo(this.map);
+    this.updateGLMap();
 
     this.map.setView(COMPIEGNE_LATLNG, 17);
     this.map.on('click', (ev) => {
@@ -52,8 +47,27 @@ class LeafletMap extends React.Component {
     }).addTo(this.map);
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
     this.update();
+
+    if (
+      prevProps.mapboxLogin !== this.props.mapboxLogin ||
+      prevProps.mapboxMapId !== this.props.mapboxMapId ||
+      prevProps.mapboxAccessToken !== this.props.mapboxAccessToken) {
+      this.updateGLMap();
+    }
+  }
+
+  updateGLMap () {
+    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
+
+    if (this.gl) {
+      this.map.removeLayer(this.gl);
+    }
+    this.gl = L.mapboxGL({
+      style: `mapbox://styles/${ mapboxLogin }/${ mapboxMapId }`,
+      accessToken: mapboxAccessToken
+    }).addTo(this.map);
   }
 
   update () {
