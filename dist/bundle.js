@@ -74,11 +74,11 @@
 	    var _require2 = __webpack_require__(160);
 
 	    var Router = _require2.Router;
-	    var browserHistory = _require2.browserHistory;
+	    var hashHistory = _require2.hashHistory;
 
 	    var routes = __webpack_require__(217);
 
-	    render(React.createElement(Router, { children: routes, history: browserHistory }), document.getElementById('react-view'));
+	    render(React.createElement(Router, { children: routes, history: hashHistory }), document.getElementById('react-view'));
 
 	    /* REACT HOT LOADER */
 	  }).call(undefined);
