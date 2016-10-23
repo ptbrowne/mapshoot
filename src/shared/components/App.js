@@ -194,16 +194,20 @@ class App extends React.Component {
   handleClickMap (latlng) {
     var cameraType = this.state.selectedCameraType;
     if (!cameraType) {
-      window.alert('select camera type first');
+      this.setState({ selectedCamera: null });
+    } else {
+      this.state.cameras.push(new Camera({
+        widthInMillimeters: cameraType.widthInMillimeters,
+        heightInMillimeters: cameraType.heightInMillimeters,
+        latlng: [latlng.lat, latlng.lng],
+        zoom: cameraType.defaultZoom,
+        map: this.refs.map.map
+      }));
+      this.setState({
+        cameras: this.state.cameras,
+        selectedCameraType: null
+      });
     }
-    this.state.cameras.push(new Camera({
-      widthInMillimeters: cameraType.widthInMillimeters,
-      heightInMillimeters: cameraType.heightInMillimeters,
-      latlng: [latlng.lat, latlng.lng],
-      zoom: cameraType.defaultZoom,
-      map: this.refs.map.map
-    }));
-    this.setState({ cameras: this.state.cameras });
     this.saveStateLS();
   }
 
