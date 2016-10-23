@@ -1,0 +1,136 @@
+html {
+    font-size: 10px;
+}
+
+body {
+    font-family: 'Open Sans';
+    position: fixed;
+    height: 100%;
+    color: white;
+    background: #333;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+h1 {
+    margin-left: 0.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+a {
+    color: white;
+}
+
+/* PANELS */
+
+.panel-container {
+    display: table;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: auto;
+    height: 100%;
+}
+
+.panel {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+}
+
+.panel-section {
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tools-panel {
+    width: 150px;
+}
+
+.map-panel {
+}
+
+.result-panel {
+    width: 200px;
+    margin: 1rem;
+}
+
+
+/* RESULTS */
+.results__camera {
+    width: 40px;
+    margin-right: 2px;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+.results__selected-camera {
+    width: 100%;
+    border: 1px solid white;
+}
+
+/* BUTTONS */
+button, input[type=file], .btn {
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    text-decoration: none;
+    background: #8a8acb;
+    color: white;
+    border-radius: 3px;
+    border: 0;
+    font-family: 'Open Sans';
+    font-size: 1.25rem;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn input[type=file] {
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+/* TOOLS */
+.camera-type {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+.camera-type__selected {
+    color: white;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* MAP */
+.camera-path__selected {
+  stroke-dasharray: 20;
+  animation: dash 10s linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 250;
+  }
+}
