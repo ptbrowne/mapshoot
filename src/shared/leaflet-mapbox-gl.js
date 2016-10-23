@@ -1,3 +1,5 @@
+/* global mapboxgl */
+
 L.MapboxGL = L.Layer.extend({
     options: {
       updateInterval: 32

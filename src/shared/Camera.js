@@ -1,12 +1,10 @@
-const _ = require('lodash');
 const MILLIMETER_PER_INCH = 25.4;
 
-const { ACCESS_TOKEN, MAPBOX_MAP_ID, MAPBOX_LOGIN } = require('./settings');
 
-const getStaticMapURL = function (lng, lat, width, height, zoom) {
+const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, mapboxMapId, mapboxAccessToken) {
   width = Math.round(width);
   height = Math.round(height);
-  return `https://api.mapbox.com/styles/v1/${MAPBOX_LOGIN}/${MAPBOX_MAP_ID}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}?access_token=${ACCESS_TOKEN}`;
+  return `https://api.mapbox.com/styles/v1/${mapboxLogin}/${mapboxMapId}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}?access_token=${mapboxAccessToken}`;
 };
 
 class CameraType {
@@ -26,6 +24,10 @@ class Camera {
     this.zoom = options.zoom;
     this.latlng = options.latlng;
     this.map = options.map;
+
+    if (!this.id) {
+      this.id = 'camera' + Math.random();
+    }
 
     if (!options.polygon) {
       this.updatePolygon();
@@ -74,10 +76,10 @@ class Camera {
     return this.latlng;
   }
 
-  getRenderString () {
+  getRenderString (mapboxLogin, mapboxMapId, mapboxAccessToken) {
     const [ latitude, longitude ] = this.getCenter();
     const [ widthPx, heightPx ] = this.getPixelDimensions();
-    return getStaticMapURL(latitude, longitude, widthPx, heightPx, this.zoom);
+    return getStaticMapURL(latitude, longitude, widthPx, heightPx, this.zoom, mapboxLogin, mapboxMapId, mapboxAccessToken);
   }
 
 
@@ -89,6 +91,7 @@ class Camera {
 
   toJSON () {
     return {
+      id: this.id,
       widthInMillimeters: this.widthInMillimeters,
       heightInMillimeters: this.heightInMillimeters,
       ppi: this.ppi,
@@ -111,6 +114,7 @@ Camera.makeRectangle = function (latlngs) {
 Camera.fromJSON = function (j) {
   try {
     return new Camera({
+      id: j.id,
       widthInMillimeters: j.widthInMillimeters,
       heightInMillimeters: j.heightInMillimeters,
       ppi: j.ppi,

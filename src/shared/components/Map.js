@@ -4,14 +4,15 @@ const _ = require('lodash');
 
 if (typeof window != 'undefined') {
   require('../leaflet-mapbox-gl');
+  require('../../client/vendor/L.Path.Transform');
+  require('../../client/vendor/L.Path.Drag');
 }
 
 var COMPIEGNE_LATLNG = [49.41794, 2.82606];
-const { ACCESS_TOKEN, MAPBOX_LOGIN, MAPBOX_MAP_ID } = require('../settings');
 
 var layerFromCamera = function (camera, options) {
-  var latlngs = camera.polygon._latlngs;
-  return L.rectangle(latlngs, _.merge({
+  const arr = camera.polygon._latlngs.map(l => l.map(x => [x.lat, x.lng]));
+  return L.polygon(camera.polygon._latlngs, _.merge({
     draggable: true,
     color: 'black',
     opacity: 0.1,
@@ -20,27 +21,26 @@ var layerFromCamera = function (camera, options) {
 };
 
 
-class Map extends React.Component {
+class LeafletMap extends React.Component {
   componentDidMount () {
     // Create a map in the div #map
     var mapContainer = ReactDOM.findDOMNode(this.refs.map);
     this.map = L.map(mapContainer, {
       fadeAnimation: false
     });
-  // create the tile layer with correct attribution
-  var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-  var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
-  this.map.addLayer(osm);
-    var gl = L.mapboxGL({
-        style: `mapbox://styles/${ MAPBOX_LOGIN }/${ MAPBOX_MAP_ID }`,
-        accessToken: ACCESS_TOKEN
+
+    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
+
+    L.mapboxGL({
+        style: `mapbox://styles/${ mapboxLogin }/${ mapboxMapId }`,
+        accessToken: mapboxAccessToken
     }).addTo(this.map);
-    //osm.addTo(this.map);
 
     this.map.setView(COMPIEGNE_LATLNG, 17);
     this.map.on('click', (ev) => {
-      this.props.onClick(ev.latlng);
+      if (!ev.originalEvent.defaultPrevented) {
+        this.props.onClick(ev.latlng);
+      }
     });
     window.map = this.map;
     //this.loadGpx();
@@ -58,7 +58,6 @@ class Map extends React.Component {
   }
 
   update () {
-    console.log('upadtelayers!');
     _.each(this.layers, (layer) => {
       this.map.removeLayer(layer);
     });
@@ -66,8 +65,14 @@ class Map extends React.Component {
       const isSelected =  camera == this.props.selectedCamera;
       var layer = layerFromCamera(camera, {
         opacity: isSelected ? '0.5' : '0.1',
-        weight: isSelected ? '3px' : '1px',
+        weight: isSelected ? 3 : 1,
         className: 'camera-path' + (isSelected ? ' camera-path__selected': '')
+      });
+      layer.on('click', (ev) => {
+        console.log(ev.originalEvent);
+        ev.originalEvent.preventDefault();
+        ev.originalEvent.stopPropagation();
+        this.props.onClickCamera(camera);
       });
       layer.on('dblclick', (ev) => {
         ev.originalEvent.stopPropagation();
@@ -86,8 +91,8 @@ class Map extends React.Component {
   }
 
   render () {
-    return <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}} ref='map'></div>;
+    return <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}ref='map'></div>;
   }
 }
 
-module.exports = Map;
+module.exports = LeafletMap;

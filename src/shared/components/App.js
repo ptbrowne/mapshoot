@@ -1,31 +1,39 @@
 const Map = require('./Map');
 const React = require('react');
 const _ = require('lodash');
-
+const { Camera, CameraType } = require('../Camera');
+const Results = require('./Results');
 
 if (typeof window !== "undefined") {
   require('../style.scss');
   require('../../client/vendor/gpx');
-  require('../../client/vendor/L.Path.Drag');
 }
 
-var COMPIEGNE_LATLNG = [49.41794, 2.82606];
+const COMPIEGNE_LATLNG = [49.41794, 2.82606];
 
-
-const { Camera, CameraType } = require('../Camera');
+const { BACKSPACE } = {
+  BACKSPACE: 8
+};
 
 class CameraTypeRenderer extends React.Component {
   render () {
-    var { widthInMillimeters, heightInMillimeters, defaultZoom } = this.props.cameraType;
-    return <div className={'camera-type ' + (this.props.selectde ? 'camera-type__selected' : '') }style={{
-      width: widthInMillimeters,
-      height: heightInMillimeters,
-      marginRight: '0.25rem',
-      marginBottom: '0.25rem',
-      padding: '0.25rem',
+    const { cameraType } = this.props;
+    const { widthInMillimeters, heightInMillimeters, defaultZoom } = cameraType;
+    return <div className={'camera-type ' + (this.props.selected ? 'camera-type__selected' : '') }
+      style={{
+        width: widthInMillimeters,
+        height: heightInMillimeters,
+        marginRight: '0.25rem',
+        marginBottom: '0.25rem',
+        padding: '0.25rem',
 
-    }}>
-      {widthInMillimeters}x{heightInMillimeters} z{defaultZoom}
+      }}>
+      <div className='camera-type__content'>
+        {widthInMillimeters}x{heightInMillimeters} z{defaultZoom}
+      </div>
+      <i
+        onClick={ this.props.onRemove.bind(null, cameraType) }
+        className='fa fa-remove camera-type__remove' />
     </div>;
   }
 }
@@ -58,13 +66,17 @@ class CameraTypes extends React.Component  {
     return <div>
       { _.map(camTypes, (cameraType, i) =>
         <div key={ i } style={{ display: 'inline-block' }}
-          onDoubleClick={ this.props.onDoubleClickCameraType.bind(null, cameraType) }
           onClick={ this.props.onClick.bind(null, cameraType) } > 
-          <CameraTypeRenderer cameraType={ cameraType } selected={ cameraType == this.props.selectedCameraType } />
+          <CameraTypeRenderer
+            onRemove={ this.props.onRemoveCameraType.bind(null, cameraType) }
+            cameraType={ cameraType }
+            selected={ cameraType == this.props.selectedCameraType } />
         </div>) }
-      <div>
-        <button onClick={ this.handleCreateCameraType }>add camera</button>&nbsp;
-        <button onClick={ this.props.onClickClearCameras }>clear cameras</button>
+      <div style={{ textAlign: 'right' }}>
+        <button onClick={ this.handleCreateCameraType }>
+          <i className='fa fa-plus'/> new
+        </button>&nbsp;
+
       </div>
     </div>;
   }
@@ -84,39 +96,81 @@ class ImportExport extends React.Component {
   }
 }
 
-class Results extends React.Component {
-  render () {
-    return <div>
-      { _.map(this.props.cameras, camera => {
-        return <img
-          className='results__camera'
-          onClick={ this.props.handleSelectCamera.bind(null, camera) }
-          src={ camera.getRenderString() } />;
-      })}
-      
-      { this.props.selectedCamera ? <img className='results__selected-camera' src={ this.props.selectedCamera.getRenderString() } /> : null }
-    </div>;
-  }
-}
-
 class App extends React.Component {
 
   constructor () {
     super();
-    this.state = this.loadStateLS();
-    this.handleCreateCameraType = this.handleCreateCameraType.bind(this);
-    this.handleClickMap = this.handleClickMap.bind(this);
-    this.handleDoubleClickCamera = this.handleDoubleClickCamera.bind(this);
-    this.handleClickCameraType = this.handleClickCameraType.bind(this);
-    this.handleClickClearCameras = this.handleClickClearCameras.bind(this);
-    this.handleDoubleClickCameraType = this.handleDoubleClickCameraType.bind(this);
-    this.handleMoveCamera = this.handleMoveCamera.bind(this);
-    this.handleImportData = this.handleImportData.bind(this);
-    this.handleClickCamera = this.handleClickCamera.bind(this);
-    this.handleSelectCamera = this.handleSelectCamera.bind(this);
-    this.handleClickClearCameras = this.handleClickClearCameras.bind(this);
+
+    if (typeof window !== 'undefined') {
+      this.state = this.loadStateLS();
+    } else {
+      this.state = {};
+    }
+
+    if (!this.state.mapboxLogin) {
+      this.state.mapboxLogin = 'mapbox';
+      this.state.mapboxAccessToken = 'pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA';
+      this.state.mapboxMapId = 'streets-v9';
+    }
+
+    const methods = [
+      'handleCreateCameraType',
+      'handleClickMap',
+      'handleDoubleClickCamera',
+      'handleClickCameraType',
+      'handleClickClearCameras',
+      'removeCameraType',
+      'handleMoveCamera',
+      'handleImportData',
+      'handleClickCamera',
+      'handleSelectCamera',
+      'handleClickClearCameras',
+      'handleKeyDown',
+      'handleChangeSetting'
+    ];
+
+    methods.forEach(method => {
+      this[method] = this[method].bind(this);
+    });
   }
 
+  componentDidUpdate () {
+    this.saveStateLS();
+  }
+
+  componentDidMount () {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown (ev) {
+    if (ev.which == BACKSPACE && this.state.selectedCamera) {
+      this.removeCurrentCamera();
+    }
+  }
+
+  removeCurrentCamera () {
+    this.removeCamera(this.state.selectedCamera);
+  }
+
+  removeCamera (camera) {
+    const { cameras } = this.state;
+    const i = cameras.indexOf(camera);
+    if (i > -1) {
+      cameras.splice(i, 1);
+    }
+    this.setState({ cameras });
+    if (this.state.selectedCamera == camera) {
+      this.setState({ selectedCamera: null });
+    }
+  }
+
+  clearCameras () {
+    this.setState({ cameras: [], selectedCamera: null });
+  }
 
   handleImportData (ev) {
     var file = ev.target.files[0];
@@ -188,15 +242,6 @@ class App extends React.Component {
     localStorage.setItem('state', s);
   }
 
-  componentDidUpdate () {
-    this.saveStateLS();
-  }
-
-
-  clearCameras () {
-    this.setState({ cameras: []});
-  }
-
   handleClickClearCameras () {
     if (window.confirm('Are you sure to clear the cameras ?')) {
       this.clearCameras();
@@ -223,7 +268,7 @@ class App extends React.Component {
     }
   }
 
-  handleDoubleClickCameraType (cameraType) {
+  removeCameraType (cameraType) {
     var indexCt = this.state.cameraTypes.indexOf(cameraType);
     this.state.cameraTypes.splice(indexCt, 1);
     this.setState({
@@ -231,12 +276,23 @@ class App extends React.Component {
     });
   }
 
-  handleClickCamera (camera) {
+  selectCamera (camera) {
     this.setState({ selectedCamera: camera });
   }
 
+  handleClickCamera (camera) {
+    this.selectCamera(camera);
+  }
+
   handleSelectCamera (camera) {
-    this.setState({ selectedCamera: camera });
+    this.selectCamera(camera);
+  }
+
+  handleChangeSetting (settingName, ev) {
+    const upd = {};
+    upd[settingName] = ev.currentTarget.value;
+    this.setState(upd);
+    this.saveStateLS();
   }
 
   render() {
@@ -244,13 +300,12 @@ class App extends React.Component {
       <div className='panel tools-panel'>
         <h1>MapSnap</h1>
         <div className='panel-section'>
-          <h2><i className='fa fa-fw fa-camera-retro' /> Cameras</h2>
+          <h2><i className='fa fa-fw fa-camera-retro' /> Camera templates</h2>
           <CameraTypes
             cameraTypes={ this.state.cameraTypes }
             selectedCameraType={ this.state.selectedCameraType }
             onCreateCameraType={ this.handleCreateCameraType }
-            onDoubleClickCameraType={ this.handleDoubleClickCameraType }
-            onClickClearCameras={ this.handleClickClearCameras }
+            onRemoveCameraType={ this.removeCameraType }
             onClick={ this.handleClickCameraType } />
         </div>
 
@@ -258,9 +313,25 @@ class App extends React.Component {
           <h2><i className='fa fa-fw fa-file' /> Import/Export</h2>
           <ImportExport onImport={ this.handleImportData }/>
         </div>
+
+        <div className='panel-section'>
+          <h2><i className='fa fa-fw fa-gear' /> Settings</h2>
+          <div>
+            <h3>mapbox</h3>
+            login <input
+              onChange={ this.handleChangeSetting.bind(null, 'mapboxLogin') } value={ this.state.mapboxLogin }/><br/>
+            map id <input
+              onChange={ this.handleChangeSetting.bind(null, 'mapboxMapId') } value={ this.state.mapboxMapId }/><br/>
+            access token <input
+              onChange={ this.handleChangeSetting.bind(null, 'mapboxAccessToken') } value={ this.state.mapboxAccessToken }/><br/>
+          </div>
+        </div>
       </div>
       <div className='panel map-panel'>
         <Map
+          mapboxLogin={ this.state.mapboxLogin }
+          mapboxMapId={ this.state.mapboxMapId }
+          mapboxAccessToken={ this.state.mapboxAccessToken }
           ref='map'
           onClick={ this.handleClickMap }
           cameras={ this.state.cameras }
@@ -271,14 +342,14 @@ class App extends React.Component {
           initialCenter={ this.center } />
       </div>
       <div className='panel result-panel'>
-        <div className='panel-section'>
-          <h2>Snapshots</h2>
-          <Results
-            cameras={ this.state.cameras }
-            selectedCamera={ this.state.selectedCamera }
-            handleSelectCamera={ this.handleSelectCamera }
-          />
-        </div>
+        <Results
+          mapboxLogin={ this.state.mapboxLogin }
+          mapboxMapId={ this.state.mapboxMapId }
+          mapboxAccessToken={ this.state.mapboxAccessToken }
+          cameras={ this.state.cameras }
+          selectedCamera={ this.state.selectedCamera }
+          onClearCameras={ this.handleClickClearCameras }
+          onSelectCamera={ this.handleSelectCamera } />
       </div>
     </div>;
   }

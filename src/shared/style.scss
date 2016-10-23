@@ -23,6 +23,11 @@ h1 {
 h2 {
     font-size: 1.5rem;
     margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+}
+
+h3 {
+    margin-top: 0.25rem;
     margin-bottom: 0.25rem;
 }
 
@@ -88,7 +93,6 @@ a {
 /* BUTTONS */
 button, input[type=file], .btn {
     padding: 0.5rem;
-    margin-bottom: 0.25rem;
     text-decoration: none;
     background: #8a8acb;
     color: white;
@@ -107,24 +111,55 @@ button, input[type=file], .btn {
     z-index: -1;
 }
 
+/* INPUTS */
+input {
+    background: rgba(255,255,255,0.1);
+    border: 0;
+    border-radius: 2px;
+    padding: 2px;
+    color: white;
+}
+
+
 /* TOOLS */
 .camera-type {
     color: white;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
     cursor: pointer;
+    position: relative;
 }
 
+.camera-type__content {
+    overflow: hidden;
+}
+
+.camera-type__remove {
+    position: absolute;
+    top: -0.75rem;
+    right: -0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    color: crimson;
+}
+
+.camera-type:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.camera-type:hover .camera-type__remove {
+    opacity: 1;
+    transform: scale(1.1);
+}
 
 .camera-type__selected {
     color: white;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 /* MAP */
 .camera-path__selected {
-  stroke-dasharray: 20;
+  stroke-dasharray: 5;
   animation: dash 10s linear;
   animation-iteration-count: infinite;
 }

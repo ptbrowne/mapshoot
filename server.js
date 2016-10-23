@@ -35,12 +35,14 @@ app.use((req, res) => {
     }
     if (!renderProps) return res.status(404).end('Not found.');
 
-    // const InitialComponent = (
-    //   <RouterContext {...renderProps} />
-    // );
-    //const componentHTML = renderToString(InitialComponent);
-    const componentHTML = '';
-    const HTML = fs.readFileSync(path.resolve(__dirname, 'src/shared/index.html'));
+    const InitialComponent = (
+      <RouterContext {...renderProps} />
+    );
+    const componentHTML = renderToString(InitialComponent);
+    const HTML = fs
+      .readFileSync(path.resolve(__dirname, 'src/shared/index.html')) + ''
+      .replace('${componentHTML}', componentHTML);
+
     res.end(HTML);
   });
 });
