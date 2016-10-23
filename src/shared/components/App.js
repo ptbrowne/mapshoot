@@ -1,4 +1,4 @@
-const Map = require('./Map');
+const LeafletMap = require('./Map');
 const React = require('react');
 const _ = require('lodash');
 const { Camera, CameraType } = require('../Camera');
@@ -328,7 +328,7 @@ class App extends React.Component {
         </div>
       </div>
       <div className='panel map-panel'>
-        <Map
+        <LeafletMap
           mapboxLogin={ this.state.mapboxLogin }
           mapboxMapId={ this.state.mapboxMapId }
           mapboxAccessToken={ this.state.mapboxAccessToken }

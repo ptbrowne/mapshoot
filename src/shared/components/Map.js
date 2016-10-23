@@ -11,7 +11,6 @@ if (typeof window != 'undefined') {
 var COMPIEGNE_LATLNG = [49.41794, 2.82606];
 
 var layerFromCamera = function (camera, options) {
-  const arr = camera.polygon._latlngs.map(l => l.map(x => [x.lat, x.lng]));
   return L.polygon(camera.polygon._latlngs, _.merge({
     draggable: true,
     color: 'black',
