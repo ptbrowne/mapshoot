@@ -152,7 +152,7 @@ input {
     transform: scale(1.1);
 }
 
-.camera-type__selected {
+.camera-type__selected, .camera-type__selected:hover {
     color: white;
     background: rgba(255, 255, 255, 0.5);
 }
