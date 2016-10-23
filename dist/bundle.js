@@ -25325,16 +25325,7 @@
 	            fadeAnimation: false
 	          });
 
-	          var _props = this.props;
-	          var mapboxLogin = _props.mapboxLogin;
-	          var mapboxMapId = _props.mapboxMapId;
-	          var mapboxAccessToken = _props.mapboxAccessToken;
-
-
-	          L.mapboxGL({
-	            style: "mapbox://styles/" + mapboxLogin + "/" + mapboxMapId,
-	            accessToken: mapboxAccessToken
-	          }).addTo(this.map);
+	          this.updateGLMap();
 
 	          this.map.setView(COMPIEGNE_LATLNG, 17);
 	          this.map.on('click', function (ev) {
@@ -25354,8 +25345,29 @@
 	        }
 	      }, {
 	        key: "componentDidUpdate",
-	        value: function componentDidUpdate() {
+	        value: function componentDidUpdate(prevProps) {
 	          this.update();
+
+	          if (prevProps.mapboxLogin !== this.props.mapboxLogin || prevProps.mapboxMapId !== this.props.mapboxMapId || prevProps.mapboxAccessToken !== this.props.mapboxAccessToken) {
+	            this.updateGLMap();
+	          }
+	        }
+	      }, {
+	        key: "updateGLMap",
+	        value: function updateGLMap() {
+	          var _props = this.props;
+	          var mapboxLogin = _props.mapboxLogin;
+	          var mapboxMapId = _props.mapboxMapId;
+	          var mapboxAccessToken = _props.mapboxAccessToken;
+
+
+	          if (this.gl) {
+	            this.map.removeLayer(this.gl);
+	          }
+	          this.gl = L.mapboxGL({
+	            style: "mapbox://styles/" + mapboxLogin + "/" + mapboxMapId,
+	            accessToken: mapboxAccessToken
+	          }).addTo(this.map);
 	        }
 	      }, {
 	        key: "update",
