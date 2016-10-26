@@ -83,7 +83,7 @@ const config = {
       __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
       __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
       'process.env': JSON.stringify({
-        NODE_ENV: process.env.NODE_ENV
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev')
       })
     }),
 
@@ -94,7 +94,5 @@ const config = {
     new webpack.optimize.UglifyJsPlugin({ minimize: true, sourceMap: false }) 
   ] : [])
 };
-
-console.log(config);
 
 module.exports = config;
