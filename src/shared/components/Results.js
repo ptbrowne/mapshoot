@@ -1,5 +1,5 @@
 const React = require('react');
-const _ = require('lodash');
+const _ = require('lodash/core');
 
 const { connect } = require('react-redux');
 const { CLEAR_CAMERAS, SELECT_CAMERA, REMOVE_CAMERA } = require('shared/actions');

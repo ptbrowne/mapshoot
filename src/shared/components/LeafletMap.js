@@ -1,6 +1,6 @@
+const _ = require('lodash/core');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const _ = require('lodash');
 const { Camera } = require('shared/Camera');
 const { connect } = require('react-redux');
 

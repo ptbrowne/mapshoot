@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require('lodash/core');
 const { connect } = require('react-redux');
 const { ActionTypes } = require('redux-undo');
 
@@ -11,7 +11,6 @@ const { SELECT_CAMERA_TYPE, REMOVE_CAMERA } = require('shared/actions');
 
 if (typeof window !== "undefined") {
   require('../style.scss');
-  require('client/vendor/gpx');
 }
 
 const keyboard = {

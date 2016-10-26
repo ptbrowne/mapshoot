@@ -1,5 +1,5 @@
+const _ = require('lodash/core');
 const React = require('react');
-const _ = require('lodash');
 const CameraTypeSelector = require('shared/components/CameraTypeSelector');
 const { connect } = require('react-redux');
 const { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } = require('shared/actions');

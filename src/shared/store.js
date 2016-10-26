@@ -1,3 +1,4 @@
+const _ = require('lodash/core');
 const { combineReducers, createStore, applyMiddleware } = require('redux');
 const {
   ADD_CAMERA,
@@ -11,7 +12,6 @@ const {
   CLEAR_CAMERAS,
   UPDATE_SETTINGS
 } = require('shared/actions');
-const _ = require('lodash');
 
 const reduxUndo = require('redux-undo');
 const includeAction = reduxUndo.includeAction;
@@ -82,7 +82,7 @@ const getInitialStore = function () {
     try {
       var s = JSON.parse(store).present;
       if (!s) { return init; }
-      s = _.extend(init, s);
+      s = _.assignIn(init, s);
       s.cameraTypes = _.map(s.cameraTypes, (ct) => new CameraType(ct));
       s.cameras = _.map(s.cameras, (jsonCamera) => Camera.fromJSON(jsonCamera));
       if (s.selectedCamera) {

@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require('lodash/core');
 const React = require('react');
 const { connect } = require('react-redux');
 const { SELECT_CAMERA_TYPE, REMOVE_CAMERA_TYPE } = require('shared/actions'); 
@@ -14,7 +14,7 @@ class _CameraTypeSelector extends React.Component {
     const { widthInMillimeters, heightInMillimeters, defaultZoom } = cameraType;
     const className = 'camera-type ' + (this.props.selected ? 'camera-type__selected' : '');
     return <div className={ className } onClick={ this.props.onSelect.bind(null, cameraType) }
-      style={ _.extend({
+      style={ _.assignIn({
         width: widthInMillimeters,
         height: heightInMillimeters
       }, defaultStyle) }>
