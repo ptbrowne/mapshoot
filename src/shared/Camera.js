@@ -4,7 +4,7 @@ const MILLIMETER_PER_INCH = 25.4;
 const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, mapboxMapId, mapboxAccessToken) {
   width = Math.round(width);
   height = Math.round(height);
-  return `https://api.mapbox.com/styles/v1/${mapboxLogin}/${mapboxMapId}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}?access_token=${mapboxAccessToken}`;
+  return `https://api.mapbox.com/styles/v1/${mapboxLogin}/${mapboxMapId}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}@2x?access_token=${mapboxAccessToken}`;
 };
 
 class CameraType {
@@ -23,11 +23,8 @@ class Camera {
     this.ppi = options.ppi || 300;
     this.zoom = options.zoom;
     this.latlng = options.latlng;
-    this.map = options.map;
 
-    if (!this.id) {
-      this.id = 'camera' + Math.random();
-    }
+    this.id = options.id ? Camera.registerId(options.id) : Camera.makeId();
 
     if (!options.polygon) {
       this.updatePolygon();
@@ -36,18 +33,35 @@ class Camera {
     }
   }
 
+  copy () {
+    return new Camera({
+      widthInMillimeters: this.widthInMillimeters,
+      heightInMillimeters: this.heightInMillimeters,
+      ppi: this.ppi,
+      id: this.id,
+      latlng: this.latlng,
+      polygon: this.polygon,
+      zoom: this.zoom
+    });
+  }
+
+  imUpdate (update) {
+    return Object.assign(this.copy(), update);
+  }
+
   updatePolygon () {
     this.polygon = this.getPolygon();
   }
 
   getPolygon () {
+    const projection = L.CRS.EPSG3395;
     // pixel per millimeters 
     var ppmm = this.ppi / MILLIMETER_PER_INCH;
     var widthPx = this.widthInMillimeters * ppmm;
     var heightPx = this.heightInMillimeters * ppmm;
 
     var latlng = L.latLng(this.latlng);
-    var centerPx = this.map.project(latlng, this.zoom);
+    var centerPx = projection.latLngToPoint(latlng, this.zoom);
 
     var xMin = centerPx.x - widthPx/2;
     var xMax = xMin + widthPx;
@@ -56,10 +70,10 @@ class Camera {
     var yMax = yMin + heightPx;
 
     var poly = Camera.makeRectangle([
-      this.map.unproject([xMin, yMin], this.zoom),
-      this.map.unproject([xMax, yMin], this.zoom),
-      this.map.unproject([xMax, yMax], this.zoom),
-      this.map.unproject([xMin, yMax], this.zoom)
+      projection.pointToLatLng(L.point([xMin, yMin]), this.zoom),
+      projection.pointToLatLng(L.point([xMax, yMin]), this.zoom),
+      projection.pointToLatLng(L.point([xMax, yMax]), this.zoom),
+      projection.pointToLatLng(L.point([xMin, yMax]), this.zoom)
     ]);
 
     return poly;
@@ -101,6 +115,17 @@ class Camera {
     };
   }
 }
+
+Camera.previousId = -1;
+Camera.makeId = () => {
+  Camera.previousId = Camera.previousId + 1;
+  return 'camera' + Camera.previousId;
+};
+
+Camera.registerId = function (id) {
+  Camera.previousId = id;
+  return id;
+};
 
 Camera.makeRectangle = function (latlngs) {
   return L.rectangle(latlngs, {

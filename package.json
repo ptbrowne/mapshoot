@@ -21,11 +21,18 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "dev-server": "nodemon --delay 3 --harmony index.js",
-    "dev-client": "webpack-dev-server --progress --color --hot --inline",
     "build-prod": "env TARGET=PROD webpack -P; cp src/shared/index.html dist/index.html",
     "build": "webpack; cp src/shared/index.html dist/index.html",
-    "dev": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 8000 --content-base src/ --progress",
+    "dev": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 8002 --content-base src/shared --progress",
     "dev-test": "karma start karma.conf.js --reporters dots,notify,html"
+  },
+  "dependencies": {
+    "babel-eslint": "^7.0.0",
+    "eslint": "^3.8.1",
+    "eslint-loader": "^1.6.0",
+    "eslint-plugin-react": "^6.4.1",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
+    "redux-undo": "^0.6.1"
   }
 }

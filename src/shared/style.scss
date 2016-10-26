@@ -1,3 +1,6 @@
+* {
+    outline: 0;
+}
 html {
     font-size: 10px;
 }
@@ -86,22 +89,35 @@ a {
 }
 
 .results__selected-camera {
+    z-index: 1000;
+    position: relative;
     width: 100%;
-    border: 1px solid white;
+    border: 1px solid wahite;
+    transition: transform 0.3s ease;
+    transform-origin: top right;
 }
+
+.results__selected-camera:hover {
+    /*transform: scale(4);*/
+}
+
 
 /* BUTTONS */
 button, input[type=file], .btn {
     padding: 0.5rem;
     text-decoration: none;
-    background: #8a8acb;
-    color: white;
     border-radius: 3px;
     border: 0;
     font-family: 'Open Sans';
     font-size: 1.25rem;
     display: inline-block;
     cursor: pointer;
+    color: white;
+}
+
+p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .btn input[type=file] {
@@ -111,13 +127,49 @@ button, input[type=file], .btn {
     z-index: -1;
 }
 
+.btn--purple {
+    $bg: #8a8acb;
+    background: $bg;
+
+    &:hover {
+        background: lighten($bg, 10%);
+    }
+}
+
+.btn--red {
+    $bg: crimson;
+    background: $bg;
+
+    &:hover {
+        background: lighten($bg, 10%);
+    }
+}
+
+.btn--green {
+    $bg: #5caf36;
+    background: $bg;
+
+    &:hover {
+        background: lighten($bg, 10%);
+    }
+}
+
+.section__actions {
+    text-align: right;
+}
+
 /* INPUTS */
 input {
-    background: rgba(255,255,255,0.1);
+    $bg: rgba(255,255,255,0.1);
+    background: $bg;
     border: 0;
     border-radius: 2px;
     padding: 2px;
     color: white;
+
+    &:hover {
+        background: lighten($bg, 10%);
+    }
 }
 
 
@@ -159,9 +211,9 @@ input {
 
 /* MAP */
 .camera-path__selected {
-  stroke-dasharray: 5;
-  animation: dash 10s linear;
-  animation-iteration-count: infinite;
+  /*stroke-dasharray: 5;*/
+  /*animation: dash 10s linear;*/
+  /*animation-iteration-count: infinite;*/
 }
 
 @keyframes dash {
