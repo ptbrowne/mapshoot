@@ -82,7 +82,9 @@ const config = {
     new webpack.DefinePlugin({
       __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
       __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
-      'process.env': process.env
+      'process.env': JSON.stringify({
+        NODE_ENV: process.env.NODE_ENV
+      })
     }),
 
     new webpack.ProvidePlugin({
