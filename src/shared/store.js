@@ -18,28 +18,7 @@ const includeAction = reduxUndo.includeAction;
 const undoable = reduxUndo.default;
 
 const { Camera, CameraType } = require('shared/Camera');
-
-
-const immutableRemoveAtIndex = function (arr, i)  {
-  if (i < 0) {
-    return arr;
-  }
-  return arr.slice(0, i).concat(arr.slice(i + 1));
-};
-
-const replaceAtIndex = function (arr, i, updated) {
-  return arr.slice(0, i).concat([updated]).concat(arr.slice(i + 1));
-};
-
-const findAndUpdate = function (arr, finder, updater) {
-  const i = _.findIndex(arr, finder);
-  if (i > -1) {
-    const updated = updater(arr[i]);
-    return replaceAtIndex(arr, i, updated);
-  } else {
-    return arr;
-  }
-};
+const { removeAtIndex, replaceAtIndex, findAndUpdate } = require('shared/utils/immutable');
 
 const listReducer = function ({ add, remove, reset, item, initialState }) {
   return function (state, action) {
@@ -51,7 +30,7 @@ const listReducer = function ({ add, remove, reset, item, initialState }) {
       ];
     case remove:
       const i = state.indexOf(action[item]);
-      return immutableRemoveAtIndex(state, i);
+      return removeAtIndex(state, i);
     case reset:
       return [];
     }

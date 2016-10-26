@@ -4,7 +4,7 @@ const CameraTypeSelector = require('shared/components/CameraTypeSelector');
 const { connect } = require('react-redux');
 const { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } = require('shared/actions');
 
-const { CameraType } = require('shared/Camera');
+const { CameraType } = require('shared/models');
 
 class _CameraTypes extends React.Component  {
   constructor () {

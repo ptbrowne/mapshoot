@@ -1,7 +1,7 @@
 const _ = require('lodash/core');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const { Camera } = require('shared/Camera');
+const { Camera } = require('shared/models');
 const { connect } = require('react-redux');
 
 const {
@@ -23,7 +23,7 @@ if (typeof window != 'undefined') {
 var COMPIEGNE_LATLNG = [49.41794, 2.82606];
 
 var layerFromCamera = function (camera, options) {
-  const layer = L.polygon(camera.polygon._latlngs, _.merge({
+  const layer = L.polygon(camera.polygon._latlngs, _.assignIn({
     draggable: true,
     color: 'black',
     opacity: 0.1,
