@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const SRC_DIR = path.resolve(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
 
-const isProd = true;
+const isProd = process.env.NODE_ENV == 'production';
 
 const config = {
   entry: [
@@ -81,13 +81,16 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-      __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false'))
+      __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
+      'process.env': process.env
     }),
 
     new webpack.ProvidePlugin({
       React: 'react'
     })
-  ]
+  ].concat(isProd ? [
+    new webpack.optimize.UglifyJsPlugin({ minimize: true, sourceMap: false }) 
+  ] : [])
 };
 
 console.log(config);
