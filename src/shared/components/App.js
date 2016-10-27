@@ -5,43 +5,14 @@ const { ActionTypes } = require('redux-undo');
 const LeafletMap = require('shared/components/LeafletMap');
 const Results = require('shared/components/Results');
 const Settings = require('shared/components/Settings');
+const ImportExport = require('shared/components/ImportExport');
 
 const CameraTypes = require('shared/components/CameraTypes');
 const { SELECT_CAMERA_TYPE, REMOVE_CAMERA } = require('shared/actions');
+const keyboard = require('shared/utils/keyboard');
 
 if (typeof window !== "undefined") {
   require('../style.scss');
-}
-
-const keyboard = {
-  BACKSPACE: 8,
-  Z: 90,
-  Y: 89
-};
-
-class ImportExport extends React.Component {
-  render () {
-    return <div>
-      <label className='btn btn--purple'><i className='fa fa-import'/> Import<input type='file' onChange={ this.props.onImport } /></label>&nbsp;
-      <a className='btn btn--purple' download='data.json' href={ this.getExportData() }>
-        <i className='fa fa-export'/>  Export
-      </a>
-    </div>;
-  }
-
-  handleImportData (ev) {
-    var file = ev.target.files[0];
-    var reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onload = (ev) => {
-      this.setState(this.loadState(ev.target.result));
-    };
-  }
-
-  getExportData () {
-    var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state));
-    return data;
-  }
 }
 
 class _App extends React.Component {
@@ -90,7 +61,7 @@ class _App extends React.Component {
         </div>
 
         <div className='panel-section'>
-          <h2><i className='fa fa-fw fa-file' /> Import/Export</h2>
+          <h2><i className='fa fa-fw fa-file' /> Save/Load</h2>
           <ImportExport onImport={ this.handleImportData }/>
         </div>
 

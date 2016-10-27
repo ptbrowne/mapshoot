@@ -21,7 +21,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "build-prod": "env NODE_ENV=production webpack -P --json > /tmp/bundle.json; cp src/shared/index.html dist/index.html",
+    "build-prod": "env NODE_ENV=production webpack -P --json > /tmp/bundle.json; cp src/shared/index.html dist/index.html; echo 'Build done !'; ls -lah dist/bundle.js",
     "build": "webpack; cp src/shared/index.html dist/index.html",
     "dev": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 8002 --content-base src/shared --progress",
     "dev-test": "karma start karma.conf.js --reporters dots,notify,html"

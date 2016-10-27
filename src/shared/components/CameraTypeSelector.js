@@ -15,8 +15,8 @@ class _CameraTypeSelector extends React.Component {
     const className = 'camera-type ' + (this.props.selected ? 'camera-type__selected' : '');
     return <div className={ className } onClick={ this.props.onSelect.bind(null, cameraType) }
       style={ _.assignIn({
-        width: widthInMillimeters,
-        height: heightInMillimeters
+        width: widthInMillimeters * 3,
+        height: heightInMillimeters * 3
       }, defaultStyle) }>
       <div className='camera-type__content'>
         {widthInMillimeters}x{heightInMillimeters} z{defaultZoom}

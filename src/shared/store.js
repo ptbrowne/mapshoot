@@ -1,5 +1,6 @@
 const _ = require('lodash/core');
 const { combineReducers, createStore, applyMiddleware } = require('redux');
+const hydrateState = require('shared/utils/hydrateState');
 const {
   ADD_CAMERA,
   REMOVE_CAMERA,
@@ -10,17 +11,17 @@ const {
   SELECT_CAMERA_TYPE,
   CLEAR_CAMERA_TYPES,
   CLEAR_CAMERAS,
-  UPDATE_SETTINGS
+  UPDATE_SETTINGS,
+  REPLACE_STATE
 } = require('shared/actions');
 
 const reduxUndo = require('redux-undo');
 const includeAction = reduxUndo.includeAction;
 const undoable = reduxUndo.default;
 
-const { Camera, CameraType } = require('shared/Camera');
-const { removeAtIndex, replaceAtIndex, findAndUpdate } = require('shared/utils/immutable');
+const { removeAtIndex, findAndUpdate } = require('shared/utils/immutable');
 
-const listReducer = function ({ add, remove, reset, item, initialState }) {
+const listReducer = function ({ add, remove, reset, item }) {
   return function (state, action) {
     switch(action.type) {
     case add:
@@ -59,15 +60,11 @@ const getInitialStore = function () {
     return init;
   } else {
     try {
-      var s = JSON.parse(store).present;
-      if (!s) { return init; }
-      s = _.assignIn(init, s);
-      s.cameraTypes = _.map(s.cameraTypes, (ct) => new CameraType(ct));
-      s.cameras = _.map(s.cameras, (jsonCamera) => Camera.fromJSON(jsonCamera));
-      if (s.selectedCamera) {
-        s.selectedCamera = Camera.fromJSON(s.selectedCamera);
-      }
-      return s;
+      var state = JSON.parse(store).present;
+      if (!state) { return init; }
+      state = _.assignIn(init, state);
+      hydrateState(state);
+      return state;
     } catch (e) {
       localStorage.removeItem(LS_KEY);
       console.warn('Error while loading previous state', e);
@@ -154,7 +151,7 @@ const settings = function (state = initialStore.settings, action) {
   return state;
 };
 
-const reducer = combineReducers({
+const combinedReducers = combineReducers({
   cameras,
   cameraTypes,
   map,
@@ -163,17 +160,28 @@ const reducer = combineReducers({
   settings
 });
 
-const undoableReducer = undoable(reducer, {
-  filter: includeAction([
-    ADD_CAMERA_TYPE,
-    REMOVE_CAMERA_TYPE,
-    ADD_CAMERA,
-    REMOVE_CAMERA,
-    CLEAR_CAMERAS,
-    CLEAR_CAMERA_TYPES,
-    UPDATE_CAMERA_LOCATION
-  ])
-});
+const replaceStateReducer = function (state, action) {
+  if (action.type == REPLACE_STATE) {
+    return action.state;
+  }
+  return state;
+};
+
+const reducer = composeReducers(replaceStateReducer, combinedReducers);
+
+const undoableReducer = undoable(
+  reducer, {
+    filter: includeAction([
+      ADD_CAMERA_TYPE,
+      REMOVE_CAMERA_TYPE,
+      ADD_CAMERA,
+      REMOVE_CAMERA,
+      CLEAR_CAMERAS,
+      CLEAR_CAMERA_TYPES,
+      UPDATE_CAMERA_LOCATION,
+      REPLACE_STATE
+    ])
+  });
 
 const save = _store => next => action => {
   let result = next(action);
