@@ -53,7 +53,7 @@ class _App extends React.Component {
           <span className="fa-stack" style={{ fontSize: '1.25rem' }}>
             <i className="fa fa-map fa-stack-2x"></i>
             <i style={{ color: 'black' }} className="fa fa-camera fa-stack-1x fa-inverse"></i>
-          </span>&nbsp;MapSnap
+          </span>&nbsp;MapShoot
         </h1>
         <div className='panel-section'>
           <h2><i className='fa fa-fw fa-camera-retro' /> Camera templates</h2>
