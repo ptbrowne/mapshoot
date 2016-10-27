@@ -51,7 +51,7 @@ const getInitialStore = function () {
     selectedCameraType: null,
     settings: {
       mapboxLogin: 'mapbox',
-      mapboxAccessToken: '',
+      mapboxAccessToken: 'pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA',
       mapboxMapId: 'streets-v9'
     }
   };
