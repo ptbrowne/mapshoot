@@ -1,5 +1,5 @@
 const MILLIMETER_PER_INCH = 25.4;
-
+const PROJECTION = L.CRS.EPSG3395;
 
 const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, mapboxMapId, mapboxAccessToken) {
   width = Math.round(width);
@@ -7,11 +7,13 @@ const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, ma
   return `https://api.mapbox.com/styles/v1/${mapboxLogin}/${mapboxMapId}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}@2x?access_token=${mapboxAccessToken}`;
 };
 
+const defaultPPI = 300;
+
 class CameraType {
   constructor (options) {
     this.widthInMillimeters = options.widthInMillimeters;
     this.heightInMillimeters = options.heightInMillimeters;
-    this.ppi = options.ppi || 300;
+    this.ppi = options.ppi || defaultPPI;
     this.defaultZoom = options.defaultZoom;
   }
 }
@@ -20,7 +22,7 @@ class Camera {
   constructor (options) {
     this.widthInMillimeters = options.widthInMillimeters;
     this.heightInMillimeters = options.heightInMillimeters;
-    this.ppi = options.ppi || 300;
+    this.ppi = options.ppi || defaultPPI;
     this.zoom = options.zoom;
     this.latlng = options.latlng;
 
@@ -46,7 +48,11 @@ class Camera {
   }
 
   imUpdate (update) {
-    return Object.assign(this.copy(), update);
+    const newCam = Object.assign(this.copy(), update);
+    if (!update.polygon) {
+      newCam.updatePolygon();
+    }
+    return newCam;
   }
 
   updatePolygon () {
@@ -54,26 +60,25 @@ class Camera {
   }
 
   getPolygon () {
-    const projection = L.CRS.EPSG3395;
     // pixel per millimeters 
-    var ppmm = this.ppi / MILLIMETER_PER_INCH;
-    var widthPx = this.widthInMillimeters * ppmm;
-    var heightPx = this.heightInMillimeters * ppmm;
+    const ppmm = this.ppi / MILLIMETER_PER_INCH;
+    const widthPx = this.widthInMillimeters * ppmm;
+    const heightPx = this.heightInMillimeters * ppmm;
 
-    var latlng = L.latLng(this.latlng);
-    var centerPx = projection.latLngToPoint(latlng, this.zoom);
+    const latlng = L.latLng(this.latlng);
+    const centerPx = PROJECTION.latLngToPoint(latlng, this.zoom);
 
-    var xMin = centerPx.x - widthPx/2;
-    var xMax = xMin + widthPx;
+    const xMin = centerPx.x - widthPx/2;
+    const xMax = xMin + widthPx;
 
-    var yMin = centerPx.y - heightPx/2;
-    var yMax = yMin + heightPx;
+    const yMin = centerPx.y - heightPx/2;
+    const yMax = yMin + heightPx;
 
-    var poly = Camera.makeRectangle([
-      projection.pointToLatLng(L.point([xMin, yMin]), this.zoom),
-      projection.pointToLatLng(L.point([xMax, yMin]), this.zoom),
-      projection.pointToLatLng(L.point([xMax, yMax]), this.zoom),
-      projection.pointToLatLng(L.point([xMin, yMax]), this.zoom)
+    const poly = Camera.makeRectangle([
+      PROJECTION.pointToLatLng(L.point([xMin, yMin]), this.zoom),
+      PROJECTION.pointToLatLng(L.point([xMax, yMin]), this.zoom),
+      PROJECTION.pointToLatLng(L.point([xMax, yMax]), this.zoom),
+      PROJECTION.pointToLatLng(L.point([xMin, yMax]), this.zoom)
     ]);
 
     return poly;
@@ -122,8 +127,37 @@ Camera.makeId = () => {
   return 'camera' + Camera.previousId;
 };
 
+Camera.getOptionsFromLayer = function (layer, zoom, ppi) {
+  ppi = ppi || defaultPPI;
+  const bounds = L.latLngBounds(layer._latlngs);
+  const nw = bounds.getNorthWest();
+  const se = bounds.getSouthEast();
+  const nwPixel = PROJECTION.latLngToPoint(nw, zoom);
+  const sePixel = PROJECTION.latLngToPoint(se, zoom);
+  const xMin = nwPixel.x;
+  const yMin = nwPixel.y;
+  const xMax = sePixel.x;
+  const yMax = sePixel.y;
+  const widthPx = xMax - xMin;
+  const heightPx = yMax - yMin;
+
+  const ppmm = ppi / MILLIMETER_PER_INCH;
+  const widthInMillimeters = Math.round(widthPx / ppmm);
+  const heightInMillimeters = Math.round(heightPx / ppmm);
+  const center = bounds.getCenter();
+
+  return {
+    widthInMillimeters: widthInMillimeters,
+    heightInMillimeters: heightInMillimeters,
+    latlng: [center.lat, center.lng],
+    polygon: layer,
+    zoom: zoom,
+    ppi: ppi
+  };
+};
+
 Camera.registerId = function (id) {
-  Camera.previousId = id;
+  Camera.previousId = parseInt(id.replace(/^camera/, ''), 10);
   return id;
 };
 

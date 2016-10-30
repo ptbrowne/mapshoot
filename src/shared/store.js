@@ -5,14 +5,15 @@ const {
   ADD_CAMERA,
   REMOVE_CAMERA,
   SELECT_CAMERA,
-  UPDATE_CAMERA_LOCATION,
+  UPDATE_CAMERA,
   ADD_CAMERA_TYPE,
   REMOVE_CAMERA_TYPE,
   SELECT_CAMERA_TYPE,
   CLEAR_CAMERA_TYPES,
   CLEAR_CAMERAS,
   UPDATE_SETTINGS,
-  REPLACE_STATE
+  REPLACE_STATE,
+  SET_MAP_ZOOM
 } = require('shared/actions');
 
 const reduxUndo = require('redux-undo');
@@ -92,15 +93,11 @@ const cameras = composeReducers(listReducer({
   item: 'camera'
 }), function (state = initialStore.cameras, action) {
   switch (action.type) {
-  case UPDATE_CAMERA_LOCATION:
-    const { camera, newLocation } = action;
+  case UPDATE_CAMERA:
+    const { camera, update } = action;
     const finder = (x) => x.id == camera.id;
     const updater = function (camera) {
-      const center = newLocation.getBounds().getCenter();
-      return camera.imUpdate({
-        polygon: newLocation,
-        latlng: [center.lat, center.lng]
-      });
+      return camera.imUpdate(update);
     };
     return findAndUpdate(state, finder, updater);
   }
@@ -117,7 +114,11 @@ const cameraTypes = composeReducers(listReducer({
   return state;
 });
 
-const map = function (state = {}, action) {
+const map = function (state = { zoom: 18 }, action) {
+  switch (action.type) {
+  case SET_MAP_ZOOM:
+    return Object.assign({}, state, { zoom: action.zoom });  
+  }
   return state;
 };
 
@@ -178,7 +179,7 @@ const undoableReducer = undoable(
       REMOVE_CAMERA,
       CLEAR_CAMERAS,
       CLEAR_CAMERA_TYPES,
-      UPDATE_CAMERA_LOCATION,
+      UPDATE_CAMERA,
       REPLACE_STATE
     ])
   });
