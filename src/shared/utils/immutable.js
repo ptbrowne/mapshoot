@@ -15,8 +15,12 @@ const findAndUpdate = function (arr, finder, updater) {
   const i = findIndex(arr, finder);
   if (i > -1) {
     const updated = updater(arr[i]);
+    if (updated == arr[i]) {
+      throw new Error('Find and update must replace the object');
+    }
     return replaceAtIndex(arr, i, updated);
   } else {
+    throw new Error('Could not find');
     return arr;
   }
 };

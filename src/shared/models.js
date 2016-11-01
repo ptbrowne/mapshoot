@@ -1,5 +1,7 @@
 const MILLIMETER_PER_INCH = 25.4;
+
 const PROJECTION = L.CRS.EPSG3395;
+
 
 const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, mapboxMapId, mapboxAccessToken) {
   width = Math.round(width);

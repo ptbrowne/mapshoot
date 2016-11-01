@@ -22,7 +22,11 @@ if (typeof window != 'undefined') {
 
 var COMPIEGNE_LATLNG = [49.41794, 2.82606];
 
-var layerFromCamera = function (camera, options) {
+const layerFromCamera = function (camera, options) {
+  if (camera._layer && _.isEqual(camera._layerOptions, options)) {
+    return camera._layer;
+  }
+
   const layer = L.rectangle(camera.polygon._latlngs, _.assignIn({
     draggable: true,
     color: 'black',
@@ -31,7 +35,33 @@ var layerFromCamera = function (camera, options) {
     weight: 1,
     camera
   }, options));
+
+  camera._layer = layer;
+  camera._layerOptions = options;
   return layer;
+};
+
+
+const difference = function (a, b) {
+  const res = [];
+  if (!a) {
+    return [];
+  }
+  if (!b) {
+    return a;
+  }
+  const la = a.length;
+  const lb = b.length;
+  for (let i = 0; i < la; i++) {
+    var toAdd = true;
+    for (let j = 0; j < lb; j++) {
+      if (a[i] === b[j]) { toAdd = false; break; }
+    }
+    if (toAdd) {
+      res.push(a[i]);
+    }
+  }
+  return res;
 };
 
 
@@ -151,33 +181,49 @@ class _LeafletMap extends React.Component {
   }
 
   update () {
-    _.each(this.layers, (layer) => {
-      this.map.removeLayer(layer);
-      this.editableGroup.removeLayer(layer);
-    });
+    const oldLayers = this.layers;
+
+    // update
     this.layers = _.map(this.props.cameras, camera => {
       const isSelected = camera.id == this.props.selectedCameraId;
       var layer = layerFromCamera(camera, {
+        isSelected: isSelected,
         opacity: isSelected ? '0.5' : '0.1',
         weight: isSelected ? 1 : 1,
         color: (camera.zoom == this.props.zoom - 1) ? 'green' : 'red',
         className: 'camera-path' + (isSelected ? ' camera-path__selected': '')
       });
 
-      layer.on('remove', function () {
-        layer.transform.disable();
+      layer.on('add', () => {
+        layer.on('remove', function () {
+          layer.transform.disable();
+        });
+
+        layer.on('click', this.handleClickLayer.bind(this, camera));
+        layer.on('dragend', this.handleDragLayer.bind(this, camera));
+        layer.on('dblclick', this.handleDblClickCamera.bind(this, camera));
       });
 
-      layer.on('click', this.handleClickLayer.bind(this, camera));
-      layer.on('dragend', this.handleDragLayer.bind(this, camera));
-      layer.on('dblclick', this.handleDblClickCamera.bind(this, camera));
+      return layer;
+    });
 
+    const toRemove = difference(oldLayers, this.layers);
+    const toAdd = difference(this.layers, oldLayers);
+
+    // remove
+    _.each(toRemove, layer => {
+      this.map.removeLayer(layer);
+      this.editableGroup.removeLayer(layer);
+    });
+
+    // add
+    _.each(toAdd, layer => {
+      const isSelected = layer.options.isSelected;
       if (isSelected) {
         this.editableGroup.addLayer(layer);
       } else {
         this.map.addLayer(layer);
       }
-      return layer;
     });
   }
 
@@ -194,7 +240,10 @@ const mapStateToProps = function (state) {
     cameras: state.cameras,
     selectedCameraId: state.selectedCameraId,
     selectedCameraType: state.selectedCameraType,
-    zoom: state.map.zoom
+    zoom: state.map.zoom,
+    mapboxLogin: state.settings.mapboxLogin,
+    mapboxMapId: state.settings.mapboxMapId,
+    mapboxAccessToken: state.settings.mapboxAccessToken
   };
 };
 
@@ -227,7 +276,8 @@ const mapDispatchToProps = function (dispatch, ownProps) {
     },
 
     onCreateCameraFromLayer: function (layer, zoom) {
-      const cameraOptions = Camera.getOptionsFromLayer(layer, zoom);
+      // TODO why -1 ?
+      const cameraOptions = Camera.getOptionsFromLayer(layer, zoom - 1);
       const camera = new Camera(cameraOptions);
       dispatch({ type: ADD_CAMERA, camera });
     },

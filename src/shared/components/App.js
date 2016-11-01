@@ -46,7 +46,6 @@ class _App extends React.Component {
   }
 
   render() {
-    const { settings } = this.props;
     return <div className='panel-container'>
       <div className='panel tools-panel'>
         <h1>
@@ -71,17 +70,10 @@ class _App extends React.Component {
         </div>
       </div>
       <div className='panel map-panel'>
-        <LeafletMap
-          ref='map'
-          mapboxLogin={ settings.mapboxLogin }
-          mapboxMapId={ settings.mapboxMapId }
-          mapboxAccessToken={ settings.mapboxAccessToken } />
+        <LeafletMap ref='map' />
       </div>
       <div className='panel result-panel'>
-        <Results
-          mapboxLogin={ settings.mapboxLogin }
-          mapboxMapId={ settings.mapboxMapId }
-          mapboxAccessToken={ settings.mapboxAccessToken } />
+        <Results />
       </div>
     </div>;
   }
