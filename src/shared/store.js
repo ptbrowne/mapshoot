@@ -13,7 +13,8 @@ const {
   CLEAR_CAMERAS,
   UPDATE_SETTINGS,
   REPLACE_STATE,
-  SET_MAP_ZOOM
+  SET_MAP_ZOOM,
+  SET_MAP_VIEW
 } = require('shared/actions');
 
 const reduxUndo = require('redux-undo');
@@ -114,10 +115,17 @@ const cameraTypes = composeReducers(listReducer({
   return state;
 });
 
-const map = function (state = { zoom: 18 }, action) {
+const COMPIEGNE_LAT_LNG = [49.41794, 2.82606];
+const initialMapState = { zoom: 18, center: COMPIEGNE_LAT_LNG };
+const map = function (state = initialStore.map || initialMapState, action) {
   switch (action.type) {
   case SET_MAP_ZOOM:
-    return Object.assign({}, state, { zoom: action.zoom });  
+    return Object.assign({}, state, { zoom: action.zoom });
+  case SET_MAP_VIEW:
+    const update = {};
+    if (action.zoom) { update.zoom = action.zoom; }
+    if (action.center) { update.center = action.center; }
+    return Object.assign({}, state, update);
   }
   return state;
 };

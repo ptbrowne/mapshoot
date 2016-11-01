@@ -6,11 +6,12 @@ const { connect } = require('react-redux');
 
 const {
   UPDATE_CAMERA,
-  REMOVE_CAMERA,
   SELECT_CAMERA,
   ADD_CAMERA,
+  SELECT_CAMERA_TYPE,
+
   SET_MAP_ZOOM,
-  SELECT_CAMERA_TYPE
+  SET_MAP_VIEW,
 } = require('shared/actions');
 
 
@@ -19,8 +20,6 @@ if (typeof window != 'undefined') {
   require('client/vendor/L.Path.Transform');
   require('client/vendor/L.Path.Drag'); // patched version
 }
-
-var COMPIEGNE_LATLNG = [49.41794, 2.82606];
 
 const layerFromCamera = function (camera, options) {
   if (camera._layer && _.isEqual(camera._layerOptions, options)) {
@@ -109,7 +108,7 @@ class _LeafletMap extends React.Component {
 
     this.updateGLMap();
 
-    map.setView(COMPIEGNE_LATLNG, this.props.zoom);
+    map.setView(this.props.center, this.props.zoom);
 
     map.on('click', (ev) => {
       if (!ev.originalEvent.defaultPrevented) {
@@ -117,8 +116,12 @@ class _LeafletMap extends React.Component {
       }
     });
 
-    map.on('zoomend', (ev) => {
+    map.on('zoomend', ev => {
       this.props.onChangeZoom(this.map.getZoom());
+    });
+
+    map.on('moveend', ev => {
+      this.props.onChangeCenter(this.map.getCenter());
     });
 
     window.map = this.map;
@@ -142,11 +145,14 @@ class _LeafletMap extends React.Component {
       this.updateGLMap();
     }
 
-    if (prevProps.initialCenter !== this.props.initialCenter) {
-      this.map.setCenter(this.props.initialCenter);
-    }
+    const changedCenter = !_.isEqual(prevProps.center, this.props.center);
+    const changedZoom = prevProps.zoom !== this.props.zoom;
 
-    if (prevProps.zoom !== this.props.zoom) {
+    if (changedCenter && changedZoom) {
+      this.map.setView(this.props.center, this.props.zoom);
+    } else if (changedCenter) {
+      this.map.setView(this.props.center);
+    } else if (changedZoom) {
       this.map.setZoom(this.props.zoom);
     }
   }
@@ -175,11 +181,6 @@ class _LeafletMap extends React.Component {
     this.props.onSelectCamera(camera);
   }
 
-  handleDblClickCamera (camera, ev) {
-    ev.originalEvent.stopPropagation();
-    this.props.onDoubleClickCamera(camera);
-  }
-
   update () {
     const oldLayers = this.layers;
 
@@ -201,7 +202,6 @@ class _LeafletMap extends React.Component {
 
         layer.on('click', this.handleClickLayer.bind(this, camera));
         layer.on('dragend', this.handleDragLayer.bind(this, camera));
-        layer.on('dblclick', this.handleDblClickCamera.bind(this, camera));
       });
 
       return layer;
@@ -241,6 +241,7 @@ const mapStateToProps = function (state) {
     selectedCameraId: state.selectedCameraId,
     selectedCameraType: state.selectedCameraType,
     zoom: state.map.zoom,
+    center: state.map.center,
     mapboxLogin: state.settings.mapboxLogin,
     mapboxMapId: state.settings.mapboxMapId,
     mapboxAccessToken: state.settings.mapboxAccessToken
@@ -262,12 +263,12 @@ const mapDispatchToProps = function (dispatch, ownProps) {
       dispatch({ type: SELECT_CAMERA, camera });
     },
 
-    onDoubleClickCamera: function (camera) {
-      dispatch({ type: REMOVE_CAMERA, camera });
-    },
-
     onChangeZoom: function (zoom) {
       dispatch({ type: SET_MAP_ZOOM, zoom });
+    },
+
+    onChangeCenter: function (center) {
+      dispatch({ type: SET_MAP_VIEW, center: [center.lat, center.lng] });
     },
 
     onResizeCamera: function (camera, layer) {

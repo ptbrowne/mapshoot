@@ -7,7 +7,7 @@ const { ActionTypes } = require('redux-undo');
 const { CameraType } = require('shared/models');
 const { 
   CLEAR_CAMERAS, SELECT_CAMERA, UPDATE_CAMERA,
-  ADD_CAMERA_TYPE, REMOVE_CAMERA, SET_MAP_ZOOM
+  ADD_CAMERA_TYPE, REMOVE_CAMERA, SET_MAP_VIEW
 } = require('shared/actions');
 
 class _Snapshots extends React.Component {
@@ -131,7 +131,7 @@ const mapDispatchToProps = function (dispatch) {
 
     onViewZoom: function (camera) {
       // TODO : why + 1
-      dispatch({ type: SET_MAP_ZOOM, zoom: camera.zoom + 1 });
+      dispatch({ type: SET_MAP_VIEW, center: camera.latlng, zoom: camera.zoom + 1 });
     },
 
     onSetZoom: function (camera, zoom) {
