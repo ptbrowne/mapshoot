@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+rm dist/*
+env NODE_ENV=production webpack -P --json > /tmp/bundle.json
+echo 'Build done !'
+
+BUNDLE_NAME=$(cd dist && ls bundle*)
+
+cp src/shared/index.html dist/index.html
+sed -i '' "s/__BUNDLE_NAME__/${BUNDLE_NAME}/" dist/index.html 
