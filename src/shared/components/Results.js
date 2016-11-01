@@ -69,15 +69,19 @@ class _SelectedCamera extends React.Component {
         onRemoveCamera, onCreateCameraTypeFromCamera,
         onViewZoom, onSetZoom } = this.props;
     const { mapboxMapId, mapboxAccessToken, mapboxLogin } = this.props.settings;
+    const url = selectedCamera ? selectedCamera.getRenderString(mapboxLogin, mapboxMapId, mapboxAccessToken) : null;
     return selectedCamera ? <div className='panel-section'>
         <h2><i className='fa fa-camera'/> Current camera</h2>
-        <img className='results__selected-camera' src={ selectedCamera.getRenderString(mapboxLogin, mapboxMapId, mapboxAccessToken) } /><br/>
+        <img className='results__selected-camera' src={ url } /><br/>
         <p>
           <span onClick={ this.handleClickZoom }>zoom: { selectedCamera.zoom }</span><br/>
           widthInMillimeters: { selectedCamera.widthInMillimeters }<br/>
           heightInMillimeters: { selectedCamera.heightInMillimeters }
         </p>
         <div className='section__actions'>
+          <a href={ url } download className='btn btn--green'>
+            <i className='fa fa-arrow-down' /> Download
+          </a>&nbsp;
           <button className='btn btn--red' onClick={ onRemoveCamera.bind(null, selectedCamera) } >
             <i className='fa fa-times'/> Remove
           </button>&nbsp;
