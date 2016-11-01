@@ -23,7 +23,8 @@
   "scripts": {
     "build": "scripts/build",
     "dev": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 8002 --content-base src/shared --progress",
-    "dev-test": "karma start karma.conf.js --reporters dots,notify,html"
+    "dev-test": "karma start karma.conf.js --reporters dots,notify,html",
+    "deploy": "git push origin `git subtree split --prefix dist master`:gh-pages --force"
   },
   "dependencies": {
     "babel-eslint": "^7.0.0",
