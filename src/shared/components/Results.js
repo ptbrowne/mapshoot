@@ -70,13 +70,16 @@ class _SelectedCamera extends React.Component {
         onViewZoom, onSetZoom } = this.props;
     const { mapboxMapId, mapboxAccessToken, mapboxLogin } = this.props.settings;
     const url = selectedCamera ? selectedCamera.getRenderString(mapboxLogin, mapboxMapId, mapboxAccessToken) : null;
+    const rightZoom = selectedCamera ? selectedCamera.zoom == this.props.mapZoom - 1 : false;
     return selectedCamera ? <div className='panel-section'>
         <h2><i className='fa fa-camera'/> Current camera</h2>
         <img className='results__selected-camera' src={ url } /><br/>
         <p>
-          <span onClick={ this.handleClickZoom }>zoom: { selectedCamera.zoom }</span><br/>
-          widthInMillimeters: { selectedCamera.widthInMillimeters }<br/>
-          heightInMillimeters: { selectedCamera.heightInMillimeters }
+          <span className={ rightZoom ? 'bg--green' : 'bg--red' }>
+            { rightZoom ? 'Camera and map at same zoom level' : 'Camera and map at different zoom levels'}
+          </span><br/>
+          width: { selectedCamera.widthInMillimeters }mm<br/>
+          height: { selectedCamera.heightInMillimeters }mm
         </p>
         <div className='section__actions'>
           <a href={ url } download className='btn btn--green'>
@@ -163,9 +166,6 @@ class _Results extends React.Component {
     return <div>
       <Snapshots />
       <SelectedCamera />
-      <div className='panel-section'>
-        { this.props.mapZoom }
-      </div>
     </div>;
   }
 }

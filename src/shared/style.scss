@@ -146,6 +146,16 @@ p {
     }
 }
 
+.bg--red {
+    $bg: crimson;
+    background: $bg;
+}
+
+.bg--green {
+    $bg: #5caf36;
+    background: $bg;
+}
+
 .btn--green {
     $bg: #5caf36;
     background: $bg;
@@ -244,7 +254,7 @@ input {
     border-right-color: #333;
 }
 
-.introjs-button, .introjs-button:active {
+.introjs-button, .introjs-button:active, .introjs-button:focus {
     background: #7d7d7d;
     border: 0;
     color: white;
