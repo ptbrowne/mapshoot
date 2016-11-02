@@ -221,6 +221,9 @@ input {
 }
 
 /* MAP */
+.camera-path {
+    cursor: move;
+}
 .camera-path__selected {
   /*stroke-dasharray: 5;*/
   /*animation: dash 10s linear;*/
