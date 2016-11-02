@@ -160,13 +160,32 @@ const settings = function (state = initialStore.settings, action) {
   return state;
 };
 
+const undoableActions = [
+  ADD_CAMERA_TYPE,
+  REMOVE_CAMERA_TYPE,
+  ADD_CAMERA,
+  REMOVE_CAMERA,
+  CLEAR_CAMERAS,
+  CLEAR_CAMERA_TYPES,
+  UPDATE_CAMERA,
+  REPLACE_STATE
+];
+
+const actions = function (state = [], action) {
+  if (undoableActions.indexOf(action.type) > -1) {
+    return [{ type: action.type }, ...state].slice(0, 10);
+  }
+  return state;
+};
+
 const combinedReducers = combineReducers({
   cameras,
   cameraTypes,
   map,
   selectedCameraId,
   selectedCameraType,
-  settings
+  settings,
+  actions
 });
 
 const replaceStateReducer = function (state, action) {
@@ -176,25 +195,17 @@ const replaceStateReducer = function (state, action) {
   return state;
 };
 
-const reducer = composeReducers(replaceStateReducer, combinedReducers);
+var reducer = composeReducers(replaceStateReducer, combinedReducers);
 
-const undoableReducer = undoable(
+reducer = undoable(
   reducer, {
-    filter: includeAction([
-      ADD_CAMERA_TYPE,
-      REMOVE_CAMERA_TYPE,
-      ADD_CAMERA,
-      REMOVE_CAMERA,
-      CLEAR_CAMERAS,
-      CLEAR_CAMERA_TYPES,
-      UPDATE_CAMERA,
-      REPLACE_STATE
-    ])
+    filter: includeAction(undoableActions)
   });
 
 const save = _store => next => action => {
-  let result = next(action);
-  localStorage.setItem(LS_KEY, JSON.stringify(store.getState()));
+  const result = next(action);
+  const state = store.getState();
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
   return result;
 };
 
@@ -208,7 +219,7 @@ const logger = store => next => action => {
   return result;
 };
 
-const store = createStore(undoableReducer, applyMiddleware(logger, save));
+const store = createStore(reducer, applyMiddleware(logger, save));
 
 
 module.exports = store;

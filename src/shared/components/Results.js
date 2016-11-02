@@ -4,7 +4,9 @@ const _ = require('lodash/core');
 const { connect } = require('react-redux');
 const { ActionTypes } = require('redux-undo');
 
+const ActionHistory = require('shared/components/ActionHistory');
 const { CameraType } = require('shared/models');
+
 const { 
   CLEAR_CAMERAS, SELECT_CAMERA, UPDATE_CAMERA,
   ADD_CAMERA_TYPE, REMOVE_CAMERA, SET_MAP_VIEW
@@ -161,11 +163,14 @@ const mapDispatchToProps = function (dispatch) {
 
 const SelectedCamera = connect(mapStateToProps, mapDispatchToProps)(_SelectedCamera);
 
+
+
 class _Results extends React.Component {
   render () {
     return <div>
       <Snapshots />
       <SelectedCamera />
+      { false ? <ActionHistory /> : null }
     </div>;
   }
 }
