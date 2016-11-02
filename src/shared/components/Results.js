@@ -81,22 +81,22 @@ class _SelectedCamera extends React.Component {
         <div className='section__actions'>
           <a href={ url } download className='btn btn--green'>
             <i className='fa fa-arrow-down' /> Download
-          </a>&nbsp;
+          </a>
           <button className='btn btn--red' onClick={ onRemoveCamera.bind(null, selectedCamera) } >
             <i className='fa fa-times'/> Remove
-          </button>&nbsp;
+          </button>
           <button onClick={ onCreateCameraTypeFromCamera.bind(null, selectedCamera) }
               className='btn btn--green'>
             <i className='fa fa-camera-retro'/> Create camera type
-          </button>&nbsp;
+          </button>
           <button onClick={ onViewZoom.bind(null, selectedCamera) }
               className='btn btn--purple'>
-            <i className='fa fa-icon-zoom-in'/> View zoom
-          </button>&nbsp;
+            <i className='fa fa-search-plus'/> Center on camera
+          </button>
           <button onClick={ () => onSetZoom(selectedCamera, this.props.mapZoom) }
               className='btn btn--purple'>
-            <i className='fa fa-icon-zoom'/> Set Zoom
-          </button>&nbsp;
+            <i className='fa fa-pencil'/> Set zoom to map zoom
+          </button>
           <button onClick={ () => onSelectCamera(null) }
               className='btn btn--purple'>
             Deselect camera

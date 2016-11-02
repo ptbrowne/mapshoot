@@ -59,7 +59,7 @@ a {
 }
 
 .panel-section {
-    padding-top: 0.25rem;
+    padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -113,7 +113,7 @@ button, input[type=file], .btn {
     display: inline-block;
     cursor: pointer;
     color: white;
-    margin-bottom: 0.25rem;
+    margin: 0.125rem;
 }
 
 p {
@@ -222,3 +222,55 @@ input {
     stroke-dashoffset: 250;
   }
 }
+
+/* intro.js */
+.introjs-helperLayer {
+    background: rgba(0,0,0,0.5);
+}
+
+.introjs-overlay {
+    background-color: white;
+}
+
+.introjs-tooltip {
+    background: #333;
+}
+
+.introjs-arrow.top {
+    border-bottom-color: #333;
+}
+
+.introjs-arrow.left {
+    border-right-color: #333;
+}
+
+.introjs-button, .introjs-button:active {
+    background: #7d7d7d;
+    border: 0;
+    color: white;
+    text-shadow: none;
+    border-radius: 2px;
+    margin-right: 0.25rem;
+}
+
+.introjs-button:hover {
+    box-shadow: none;
+}
+
+.introjs-helperNumberLayer {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(to bottom,#5caf36 0,#427f26 100%);
+}
+
+.introjs-tooltiptext {
+    font-size: 1.2rem;
+}
+
+.introjs-disabled, .introjs-disabled:hover {
+    color: #5e5e5e;
+    background: #797979;
+}
+

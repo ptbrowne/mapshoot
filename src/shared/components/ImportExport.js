@@ -8,11 +8,11 @@ class _ImportExport extends React.Component {
     return <div>
       <label className='btn btn--purple' ref='label'>
         <i className='fa fa-import'/>
-          Save
+          Load
           <input type='file' onChange={ this.handleImportData.bind(this) } />
       </label>&nbsp;
       <a ref='link' className='btn btn--purple' download='data.json' href={ this.getExportData() }>
-        <i className='fa fa-export'/>  Load
+        <i className='fa fa-export'/>  Save
       </a>
     </div>;
   }

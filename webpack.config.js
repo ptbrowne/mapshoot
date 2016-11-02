@@ -16,7 +16,7 @@ const config = {
 
   output: {
     path: DIST_DIR,
-    filename: 'bundle.[hash].js',
+    filename: isProd ? 'bundle.[hash].js' : 'bundle.js',
     publicPath: 'static/js/dist'
   },
 
