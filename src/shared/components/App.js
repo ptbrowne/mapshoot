@@ -16,6 +16,10 @@ if (typeof window !== "undefined") {
   require('../style.scss');
 }
 
+const Key = function (props) {
+  return <span className='key'>{ props.children }</span>;
+}
+
 class _App extends React.Component {
 
   componentDidMount () {
@@ -70,7 +74,13 @@ class _App extends React.Component {
           <h2><i className='fa fa-fw fa-gear' /> Settings</h2>
           <Settings />
         </div>
-
+        <div className='panel-section'>
+          <h2>Keyboard shorcuts</h2>
+          <Key>1</Key>-<Key>9</Key> Select camera template<br/>
+          <Key>Ctrl</Key><Key>Z</Key> Undo<br/>
+          <Key>Ctrl</Key><Key>⇧</Key><Key>Z</Key> Redo<br/>
+          <Key>⌫</Key> Remove selected camera
+        </div>
         <div className='panel-section' style={{ background: 'transparent' }}>
           <button className='btn btn--purple' onClick={ this.props.onClickHelp }>
              Help <i className='fa fa-question-circle' />
