@@ -6,6 +6,7 @@ const Results = require('shared/components/Results');
 const Settings = require('shared/components/Settings');
 const ImportExport = require('shared/components/ImportExport');
 const KeyboardShortcuts = require('shared/components/KeyboardShortcuts');
+const ForkMeInGitHub = require('shared/components/ForkMeInGitHub');
 
 const CameraTypes = require('shared/components/CameraTypes');
 
@@ -15,7 +16,8 @@ if (typeof window !== "undefined") {
 
 class _App extends React.Component {
   render() {
-    return <div className='panel-container'>
+    return <div>
+    <div className='panel-container'>
       <div className='panel tools-panel'>
         <h1>
           <span className="fa-stack" style={{ fontSize: '1.25rem' }}>
@@ -53,7 +55,9 @@ class _App extends React.Component {
       <div className='panel result-panel'>
         <Results />
       </div>
-    </div>;
+    </div>
+    <ForkMeInGitHub />
+    </div>
   }
 }
 
