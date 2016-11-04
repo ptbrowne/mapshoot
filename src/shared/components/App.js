@@ -17,47 +17,47 @@ if (typeof window !== "undefined") {
 class _App extends React.Component {
   render() {
     return <div>
-    <div className='panel-container'>
-      <div className='panel tools-panel'>
-        <h1>
-          <span className="fa-stack" style={{ fontSize: '1.25rem' }}>
-            <i className="fa fa-map fa-stack-2x"></i>
-            <i style={{ color: 'black' }} className="fa fa-camera fa-stack-1x fa-inverse"></i>
-          </span>&nbsp;MapShoot
-        </h1>
-        <div className='panel-section' data-position='right' data-intro='Create a camera template if you want to reuse the same format for many shots.'>
-          <h2><i className='fa fa-fw fa-camera-retro' /> Camera templates</h2>
-          <CameraTypes />
+      <div className='panel-container'>
+        <div className='panel tools-panel'>
+          <h1>
+            <span className="fa-stack" style={{ fontSize: '1.25rem' }}>
+              <i className="fa fa-map fa-stack-2x"></i>
+              <i style={{ color: 'black' }} className="fa fa-camera fa-stack-1x fa-inverse"></i>
+            </span>&nbsp;MapShoot
+          </h1>
+          <div className='panel-section' data-position='right' data-intro='Create a camera template if you want to reuse the same format for many shots.'>
+            <h2><i className='fa fa-fw fa-camera-retro' /> Camera templates</h2>
+            <CameraTypes />
+          </div>
+
+          <div className='panel-section' data-position='right' data-intro='Save your cameras and load them later on another computer. On your computer, your cameras are auto-saved'>
+            <h2><i className='fa fa-fw fa-file' /> Save/Load</h2>
+            <ImportExport onImport={ this.handleImportData }/>
+          </div>
+
+          <div className='panel-section' data-position='right' data-intro='
+          To add features, you need to create a <a href="http://mapbox.com">Mapbox</a> account and <a href="https://www.mapbox.com/help/getting-started-mapbox-studio-2/">create a style</a>.'>
+            <h2><i className='fa fa-fw fa-gear' /> Settings</h2>
+            <Settings />
+          </div>
+
+          <KeyboardShortcuts />
+
+          <div className='panel-section' style={{ background: 'transparent' }}>
+            <button className='btn btn--purple' onClick={ this.props.onClickHelp }>
+               Help <i className='fa fa-question-circle' />
+            </button>
+          </div>
         </div>
-
-        <div className='panel-section' data-position='right' data-intro='Save your cameras and load them later on another computer. On your computer, your cameras are auto-saved'>
-          <h2><i className='fa fa-fw fa-file' /> Save/Load</h2>
-          <ImportExport onImport={ this.handleImportData }/>
+        <div className='panel map-panel'>
+          <LeafletMap ref='map' />
         </div>
-
-        <div className='panel-section' data-position='right' data-intro='
-        To add features, you need to create a <a href="http://mapbox.com">Mapbox</a> account and <a href="https://www.mapbox.com/help/getting-started-mapbox-studio-2/">create a style</a>.'>
-          <h2><i className='fa fa-fw fa-gear' /> Settings</h2>
-          <Settings />
-        </div>
-
-        <KeyboardShortcuts />
-
-        <div className='panel-section' style={{ background: 'transparent' }}>
-          <button className='btn btn--purple' onClick={ this.props.onClickHelp }>
-             Help <i className='fa fa-question-circle' />
-          </button>
+        <div className='panel result-panel'>
+          <Results />
         </div>
       </div>
-      <div className='panel map-panel'>
-        <LeafletMap ref='map' />
-      </div>
-      <div className='panel result-panel'>
-        <Results />
-      </div>
-    </div>
-    <ForkMeInGitHub />
-    </div>
+      <ForkMeInGitHub />
+    </div>;
   }
 }
 
