@@ -80,12 +80,18 @@ class _KeyboardShortcuts extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  selectedCameraId: state.present.selectedCameraId,
+  cameraTypes: state.present.cameraTypes,
+  cameras: state.present.cameras
+});
+
 const mapDispatchToProps = dispatch => ({
   onRemoveCameraSelectedCamera () {
-    if (this.present.selectedCameraId) {
+    if (this.selectedCameraId) {
       dispatch({
         type: REMOVE_CAMERA,
-        camera: _.find(this.cameras, x => x.id == this.present.selectedCameraId)
+        camera: _.find(this.cameras, x => x.id == this.selectedCameraId)
       });
     }
   },
@@ -119,12 +125,11 @@ const mapDispatchToProps = dispatch => ({
   },
 
   onSelectCameraByNumber (i) {
-    const state = this;
-    const cameraType = state.cameraTypes[i];
+    const cameraType = this.cameraTypes[i];
     if (cameraType) {
       dispatch({ type: SELECT_CAMERA_TYPE, cameraType });
     }
   }
 });
 
-module.exports = connect(null, mapDispatchToProps)(_KeyboardShortcuts);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(_KeyboardShortcuts);
