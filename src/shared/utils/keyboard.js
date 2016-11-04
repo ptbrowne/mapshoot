@@ -1,7 +1,11 @@
 module.exports = {
   BACKSPACE: 8,
-  Z: 90,
-  Y: 89,
+  ENTER: 13,
+  ESCAPE: 27,
+  E: 69,
   O: 79,
-  S: 83
+  R: 82,
+  S: 83,
+  Y: 89,
+  Z: 90
 };
