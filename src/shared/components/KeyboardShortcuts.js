@@ -18,7 +18,7 @@ const qsa = document.querySelectorAll.bind(document);
 class _KeyboardShortcuts extends React.Component {
   render () {
     return <div className='panel-section'>
-      <h2>Keyboard shorcuts</h2>
+      <h2><i className='fa fa-fw fa-keyboard-o' /> Shortcuts</h2>
       <Key>1</Key>-<Key>9</Key> Select camera template<br/>
       <Key>R</Key> Draw camera (<b>R</b>ectangle)<br/>
       <Key>Ctrl</Key><Key>Z</Key> Undo<br/>
