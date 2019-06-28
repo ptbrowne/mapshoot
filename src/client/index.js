@@ -1,9 +1,8 @@
-const { render }  = require('react-dom');
-const { Router, hashHistory }  = require('react-router');
-const routes      = require('../shared/routes');
+import App from './App';
+import { render } from 'react-dom';
 
 const node = document.getElementById('react-view');
 render(
-  <Router children={routes} history={hashHistory} />,
+  <App />,
   node
 );

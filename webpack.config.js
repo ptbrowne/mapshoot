@@ -45,7 +45,7 @@ const config = {
       // transpile JS
       {
         test: /\.jsx?$/,
-        loaders: ['babel-loader?cacheDirectory', 'react-hot-loader'],
+        loaders: ['babel-loader?cacheDirectory'],
         include: SRC_DIR
       },
 
