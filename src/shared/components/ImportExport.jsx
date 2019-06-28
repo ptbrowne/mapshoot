@@ -1,32 +1,40 @@
-import { connect } from 'react-redux';
-import hydrateState from 'shared/utils/hydrateState';
-import { REPLACE_STATE } from 'shared/actions';
-import keyboard from 'shared/utils/keyboard';
+import { connect } from "react-redux";
+import hydrateState from "shared/utils/hydrateState";
+import { REPLACE_STATE } from "shared/actions";
+import keyboard from "shared/utils/keyboard";
 
 class _ImportExport extends React.Component {
-  render () {
-    return <div>
-      <label className='btn btn--purple' ref='label'>
-        <i className='fa fa-import'/>
+  render() {
+    return (
+      <div>
+        <label className="btn btn--purple" ref="label">
+          <i className="fa fa-import" />
           Load
-          <input type='file' onChange={ this.handleImportData.bind(this) } />
-      </label>&nbsp;
-      <a ref='link' className='btn btn--purple' download='data.json' href={ this.getExportData() }>
-        <i className='fa fa-export'/>  Save
-      </a>
-    </div>;
+          <input type="file" onChange={this.handleImportData.bind(this)} />
+        </label>
+        &nbsp;
+        <a
+          ref="link"
+          className="btn btn--purple"
+          download="data.json"
+          href={this.getExportData()}
+        >
+          <i className="fa fa-export" /> Save
+        </a>
+      </div>
+    );
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    document.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  componentWillUnmount () {
-    document.removeEventListener('keydown', this.handleKeyDown);
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  handleKeyDown (ev) {
+  handleKeyDown(ev) {
     if (ev.which == keyboard.S && (ev.metaKey || ev.ctrlKey)) {
       ev.preventDefault();
       this.export();
@@ -38,42 +46,44 @@ class _ImportExport extends React.Component {
     }
   }
 
-  export (ev) {
+  export(ev) {
     var evt = document.createEvent("MouseEvents");
     evt.initEvent("click", true, false);
     this.refs.link.dispatchEvent(evt);
   }
 
-  openImportDialog () {
+  openImportDialog() {
     var evt = document.createEvent("MouseEvents");
     evt.initEvent("click", true, false);
     this.refs.label.dispatchEvent(evt);
   }
 
-  handleImportData (ev) {
+  handleImportData(ev) {
     var file = ev.target.files[0];
     var reader = new FileReader();
     reader.readAsText(file, "UTF-8");
-    reader.onload = (ev) => {
+    reader.onload = ev => {
       this.props.onImport(JSON.parse(ev.target.result));
     };
   }
 
-  getExportData () {
-    var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.props.state));
+  getExportData() {
+    var data =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(this.props.state));
     return data;
   }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function(state) {
   return {
     state: state.present
   };
 };
 
-const mapDispatchToProps = function (dispatch) {
+const mapDispatchToProps = function(dispatch) {
   return {
-    onImport: function (data) {
+    onImport: function(data) {
       hydrateState(data);
       dispatch({
         type: REPLACE_STATE,
@@ -83,6 +93,9 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const ImportExport = connect(mapStateToProps, mapDispatchToProps)(_ImportExport);
+const ImportExport = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(_ImportExport);
 
 export default ImportExport;

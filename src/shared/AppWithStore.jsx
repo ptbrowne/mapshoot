@@ -1,12 +1,14 @@
-import App from 'shared/components/App';
-import store from 'shared/store';
-import { Provider } from 'react-redux';
+import App from "shared/components/App";
+import store from "shared/store";
+import { Provider } from "react-redux";
 
 class AppWithStore extends React.Component {
-  render () {
-    return <Provider store={ store }>
-      <App />
-    </Provider>;
+  render() {
+    return (
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
   }
 }
 

@@ -2,8 +2,16 @@ const MILLIMETER_PER_INCH = 25.4;
 
 const PROJECTION = L.CRS.EPSG3395;
 
-
-const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, mapboxMapId, mapboxAccessToken) {
+const getStaticMapURL = function(
+  lng,
+  lat,
+  width,
+  height,
+  zoom,
+  mapboxLogin,
+  mapboxMapId,
+  mapboxAccessToken
+) {
   width = Math.round(width);
   height = Math.round(height);
   return `https://api.mapbox.com/styles/v1/${mapboxLogin}/${mapboxMapId}/static/${lat},${lng},${zoom},0.00,0.00/${width}x${height}@2x?access_token=${mapboxAccessToken}`;
@@ -12,7 +20,7 @@ const getStaticMapURL = function (lng, lat, width, height, zoom, mapboxLogin, ma
 const defaultPPI = 300;
 
 class CameraType {
-  constructor (options) {
+  constructor(options) {
     this.widthInMillimeters = options.widthInMillimeters;
     this.heightInMillimeters = options.heightInMillimeters;
     this.ppi = options.ppi || defaultPPI;
@@ -21,7 +29,7 @@ class CameraType {
 }
 
 class Camera {
-  constructor (options) {
+  constructor(options) {
     this.widthInMillimeters = options.widthInMillimeters;
     this.heightInMillimeters = options.heightInMillimeters;
     this.ppi = options.ppi || defaultPPI;
@@ -37,7 +45,7 @@ class Camera {
     }
   }
 
-  copy () {
+  copy() {
     return new Camera({
       widthInMillimeters: this.widthInMillimeters,
       heightInMillimeters: this.heightInMillimeters,
@@ -49,7 +57,7 @@ class Camera {
     });
   }
 
-  imUpdate (update) {
+  imUpdate(update) {
     const newCam = Object.assign(this.copy(), update);
     if (!update.polygon) {
       newCam.updatePolygon();
@@ -57,12 +65,12 @@ class Camera {
     return newCam;
   }
 
-  updatePolygon () {
+  updatePolygon() {
     this.polygon = this.getPolygon();
   }
 
-  getPolygon () {
-    // pixel per millimeters 
+  getPolygon() {
+    // pixel per millimeters
     const ppmm = this.ppi / MILLIMETER_PER_INCH;
     const widthPx = this.widthInMillimeters * ppmm;
     const heightPx = this.heightInMillimeters * ppmm;
@@ -70,10 +78,10 @@ class Camera {
     const latlng = L.latLng(this.latlng);
     const centerPx = PROJECTION.latLngToPoint(latlng, this.zoom);
 
-    const xMin = centerPx.x - widthPx/2;
+    const xMin = centerPx.x - widthPx / 2;
     const xMax = xMin + widthPx;
 
-    const yMin = centerPx.y - heightPx/2;
+    const yMin = centerPx.y - heightPx / 2;
     const yMax = yMin + heightPx;
 
     const poly = Camera.makeRectangle([
@@ -86,31 +94,39 @@ class Camera {
     return poly;
   }
 
-  getPixelDimensions () {
-    var ppmm = this.ppi / MILLIMETER_PER_INCH * 2;
+  getPixelDimensions() {
+    var ppmm = (this.ppi / MILLIMETER_PER_INCH) * 2;
     var widthPx = this.widthInMillimeters * ppmm;
     var heightPx = this.heightInMillimeters * ppmm;
     return [widthPx, heightPx];
   }
 
-  getCenter () {
+  getCenter() {
     return this.latlng;
   }
 
-  getRenderString (mapboxLogin, mapboxMapId, mapboxAccessToken) {
-    const [ latitude, longitude ] = this.getCenter();
-    const [ widthPx, heightPx ] = this.getPixelDimensions();
-    return getStaticMapURL(latitude, longitude, widthPx, heightPx, this.zoom, mapboxLogin, mapboxMapId, mapboxAccessToken);
+  getRenderString(mapboxLogin, mapboxMapId, mapboxAccessToken) {
+    const [latitude, longitude] = this.getCenter();
+    const [widthPx, heightPx] = this.getPixelDimensions();
+    return getStaticMapURL(
+      latitude,
+      longitude,
+      widthPx,
+      heightPx,
+      this.zoom,
+      mapboxLogin,
+      mapboxMapId,
+      mapboxAccessToken
+    );
   }
 
-
-  updateFromPolygon (polygon) {
+  updateFromPolygon(polygon) {
     this.polygon = polygon;
     const latlng = polygon.getBounds().getCenter();
     this.latlng = [latlng.lat, latlng.lng];
   }
 
-  toJSON () {
+  toJSON() {
     return {
       id: this.id,
       widthInMillimeters: this.widthInMillimeters,
@@ -126,10 +142,10 @@ class Camera {
 Camera.previousId = -1;
 Camera.makeId = () => {
   Camera.previousId = Camera.previousId + 1;
-  return 'camera' + Camera.previousId;
+  return "camera" + Camera.previousId;
 };
 
-Camera.getOptionsFromLayer = function (layer, zoom, ppi) {
+Camera.getOptionsFromLayer = function(layer, zoom, ppi) {
   ppi = ppi || defaultPPI;
   const bounds = L.latLngBounds(layer._latlngs);
   const nw = bounds.getNorthWest();
@@ -158,21 +174,21 @@ Camera.getOptionsFromLayer = function (layer, zoom, ppi) {
   };
 };
 
-Camera.registerId = function (id) {
-  Camera.previousId = parseInt(id.replace(/^camera/, ''), 10);
+Camera.registerId = function(id) {
+  Camera.previousId = parseInt(id.replace(/^camera/, ""), 10);
   return id;
 };
 
-Camera.makeRectangle = function (latlngs) {
+Camera.makeRectangle = function(latlngs) {
   return L.rectangle(latlngs, {
     draggable: true,
-    color: 'black',
+    color: "black",
     opacity: 0.1,
     weight: 1
   });
 };
 
-Camera.fromJSON = function (j) {
+Camera.fromJSON = function(j) {
   try {
     return new Camera({
       id: j.id,
@@ -184,11 +200,8 @@ Camera.fromJSON = function (j) {
       polygon: Camera.makeRectangle(j.polygon)
     });
   } catch (e) {
-    throw new Error('Bad camera' + JSON.stringify(j, null, 2));
+    throw new Error("Bad camera" + JSON.stringify(j, null, 2));
   }
 };
 
-export {
-  Camera,
-  CameraType
-};
+export { Camera, CameraType };

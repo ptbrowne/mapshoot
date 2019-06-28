@@ -1,6 +1,6 @@
-import _ from 'lodash/core';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
-import hydrateState from 'shared/utils/hydrateState';
+import _ from "lodash/core";
+import { combineReducers, createStore, applyMiddleware } from "redux";
+import hydrateState from "shared/utils/hydrateState";
 
 import {
   ADD_CAMERA,
@@ -15,34 +15,31 @@ import {
   UPDATE_SETTINGS,
   REPLACE_STATE,
   SET_MAP_ZOOM,
-  SET_MAP_VIEW,
-} from 'shared/actions';
+  SET_MAP_VIEW
+} from "shared/actions";
 
-import undoable, { includeAction } from 'redux-undo';
-import { removeAtIndex, findAndUpdate } from 'shared/utils/immutable';
+import undoable, { includeAction } from "redux-undo";
+import { removeAtIndex, findAndUpdate } from "shared/utils/immutable";
 
-const listReducer = function ({ add, remove, reset, item }) {
-  return function (state, action) {
-    switch(action.type) {
-    case add:
-      return [
-        ...state,
-        action[item]
-      ];
-    case remove:
-      const i = state.indexOf(action[item]);
-      return removeAtIndex(state, i);
-    case reset:
-      return [];
+const listReducer = function({ add, remove, reset, item }) {
+  return function(state, action) {
+    switch (action.type) {
+      case add:
+        return [...state, action[item]];
+      case remove:
+        const i = state.indexOf(action[item]);
+        return removeAtIndex(state, i);
+      case reset:
+        return [];
     }
 
     return state;
   };
 };
 
-const LS_KEY = 'state';
+const LS_KEY = "state";
 
-const getInitialStore = function () {
+const getInitialStore = function() {
   const init = {
     cameraTypes: [],
     cameras: [],
@@ -50,9 +47,10 @@ const getInitialStore = function () {
     selectedCamera: null,
     selectedCameraType: null,
     settings: {
-      mapboxLogin: 'mapbox',
-      mapboxAccessToken: 'pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA',
-      mapboxMapId: 'streets-v9'
+      mapboxLogin: "mapbox",
+      mapboxAccessToken:
+        "pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA",
+      mapboxMapId: "streets-v9"
     }
   };
   const store = localStorage.getItem(LS_KEY);
@@ -61,13 +59,15 @@ const getInitialStore = function () {
   } else {
     try {
       var state = JSON.parse(store).present;
-      if (!state) { return init; }
+      if (!state) {
+        return init;
+      }
       state = _.assignIn(init, state);
       hydrateState(state);
       return state;
     } catch (e) {
       localStorage.removeItem(LS_KEY);
-      console.warn('Error while loading previous state', e);
+      console.warn("Error while loading previous state", e);
       return init;
     }
   }
@@ -75,85 +75,99 @@ const getInitialStore = function () {
 
 const initialStore = getInitialStore();
 
-const composeReducers = function (/* reducers */) {
+const composeReducers = function(/* reducers */) {
   const reducers = _.slice(arguments);
-  return function (state, action) {
-    _.each(reducers, function (r) {
+  return function(state, action) {
+    _.each(reducers, function(r) {
       state = r(state, action);
     });
     return state;
   };
 };
 
-const cameras = composeReducers(listReducer({
-  add: ADD_CAMERA,
-  remove: REMOVE_CAMERA,
-  reset: CLEAR_CAMERAS,
-  item: 'camera'
-}), function (state = initialStore.cameras, action) {
-  switch (action.type) {
-  case UPDATE_CAMERA:
-    const { camera, update } = action;
-    const finder = (x) => x.id == camera.id;
-    const updater = function (camera) {
-      return camera.imUpdate(update);
-    };
-    return findAndUpdate(state, finder, updater);
+const cameras = composeReducers(
+  listReducer({
+    add: ADD_CAMERA,
+    remove: REMOVE_CAMERA,
+    reset: CLEAR_CAMERAS,
+    item: "camera"
+  }),
+  function(state = initialStore.cameras, action) {
+    switch (action.type) {
+      case UPDATE_CAMERA:
+        const { camera, update } = action;
+        const finder = x => x.id == camera.id;
+        const updater = function(camera) {
+          return camera.imUpdate(update);
+        };
+        return findAndUpdate(state, finder, updater);
+    }
+
+    return state;
   }
+);
 
-  return state;
-});
-
-const cameraTypes = composeReducers(listReducer({
-  add: ADD_CAMERA_TYPE,
-  remove: REMOVE_CAMERA_TYPE,
-  reset: CLEAR_CAMERA_TYPES,
-  item: 'cameraType'
-}), function (state = initialStore.cameraTypes, action) {
-  return state;
-});
+const cameraTypes = composeReducers(
+  listReducer({
+    add: ADD_CAMERA_TYPE,
+    remove: REMOVE_CAMERA_TYPE,
+    reset: CLEAR_CAMERA_TYPES,
+    item: "cameraType"
+  }),
+  function(state = initialStore.cameraTypes, action) {
+    return state;
+  }
+);
 
 const COMPIEGNE_LAT_LNG = [49.41794, 2.82606];
 const initialMapState = { zoom: 18, center: COMPIEGNE_LAT_LNG };
-const map = function (state = initialStore.map || initialMapState, action) {
+const map = function(state = initialStore.map || initialMapState, action) {
   switch (action.type) {
-  case SET_MAP_ZOOM:
-    return Object.assign({}, state, { zoom: action.zoom });
-  case SET_MAP_VIEW:
-    const update = {};
-    if (action.zoom) { update.zoom = action.zoom; }
-    if (action.center) { update.center = action.center; }
-    return Object.assign({}, state, update);
+    case SET_MAP_ZOOM:
+      return Object.assign({}, state, { zoom: action.zoom });
+    case SET_MAP_VIEW:
+      const update = {};
+      if (action.zoom) {
+        update.zoom = action.zoom;
+      }
+      if (action.center) {
+        update.center = action.center;
+      }
+      return Object.assign({}, state, update);
   }
   return state;
 };
 
-const selectedCameraId = function (
-    state = initialStore.selectedCamera ? initialStore.selectedCamera.id : null,
-    action) {
+const selectedCameraId = function(
+  state = initialStore.selectedCamera ? initialStore.selectedCamera.id : null,
+  action
+) {
   switch (action.type) {
-  case SELECT_CAMERA:
-    return action.camera ? action.camera.id : null;
-  case REMOVE_CAMERA:
-    return null;
+    case SELECT_CAMERA:
+      return action.camera ? action.camera.id : null;
+    case REMOVE_CAMERA:
+      return null;
   }
   return state;
 };
 
-const selectedCameraType = function (state = initialStore.selectedCameraType, action) {
+const selectedCameraType = function(
+  state = initialStore.selectedCameraType,
+  action
+) {
   switch (action.type) {
-  case SELECT_CAMERA_TYPE:
-    return action.cameraType;
-  case REMOVE_CAMERA_TYPE:
-    return null;
+    case SELECT_CAMERA_TYPE:
+      return action.cameraType;
+    case REMOVE_CAMERA_TYPE:
+      return null;
   }
   return state;
 };
 
-const settings = function (state = initialStore.settings, action) {
+const settings = function(state = initialStore.settings, action) {
   switch (action.type) {
-  case UPDATE_SETTINGS:
-    return Object.assign({}, state, action.update);
+    case UPDATE_SETTINGS:
+      return Object.assign({}, state, action.update);
   }
   return state;
 };
@@ -169,7 +183,7 @@ const undoableActions = [
   REPLACE_STATE
 ];
 
-const actions = function (state = [], action) {
+const actions = function(state = [], action) {
   if (undoableActions.indexOf(action.type) > -1) {
     return [{ type: action.type }, ...state].slice(0, 10);
   }
@@ -186,7 +200,7 @@ const combinedReducers = combineReducers({
   actions
 });
 
-const replaceStateReducer = function (state, action) {
+const replaceStateReducer = function(state, action) {
   if (action.type == REPLACE_STATE) {
     return action.state;
   }
@@ -195,10 +209,9 @@ const replaceStateReducer = function (state, action) {
 
 var reducer = composeReducers(replaceStateReducer, combinedReducers);
 
-reducer = undoable(
-  reducer, {
-    filter: includeAction(undoableActions)
-  });
+reducer = undoable(reducer, {
+  filter: includeAction(undoableActions)
+});
 
 const save = _store => next => action => {
   const result = next(action);
@@ -209,15 +222,14 @@ const save = _store => next => action => {
 
 const logger = store => next => action => {
   console.group(action.type);
-  console.log('Dispatching', action);
-  console.log('  Previous state', store.getState().present);
+  console.log("Dispatching", action);
+  console.log("  Previous state", store.getState().present);
   let result = next(action);
-  console.log('  Next state', store.getState().present);
+  console.log("  Next state", store.getState().present);
   console.groupEnd(action.type);
   return result;
 };
 
 const store = createStore(reducer, applyMiddleware(logger, save));
-
 
 export default store;

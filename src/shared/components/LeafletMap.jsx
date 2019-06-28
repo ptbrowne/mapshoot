@@ -1,8 +1,8 @@
-import _ from 'lodash/core';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Camera } from 'shared/models';
-import { connect } from 'react-redux';
+import _ from "lodash/core";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Camera } from "shared/models";
+import { connect } from "react-redux";
 
 import {
   UPDATE_CAMERA,
@@ -10,37 +10,41 @@ import {
   ADD_CAMERA,
   SELECT_CAMERA_TYPE,
   SET_MAP_ZOOM,
-  SET_MAP_VIEW,
-} from 'shared/actions';
+  SET_MAP_VIEW
+} from "shared/actions";
 
-
-if (typeof window != 'undefined') {
-  require('client/vendor/leaflet-mapbox-gl');
-  require('client/vendor/L.Path.Transform');
-  require('client/vendor/L.Path.Drag'); // patched version
+if (typeof window != "undefined") {
+  require("client/vendor/leaflet-mapbox-gl");
+  require("client/vendor/L.Path.Transform");
+  require("client/vendor/L.Path.Drag"); // patched version
 }
 
-const layerFromCamera = function (camera, options) {
+const layerFromCamera = function(camera, options) {
   if (camera._layer && _.isEqual(camera._layerOptions, options)) {
     return camera._layer;
   }
 
-  const layer = L.rectangle(camera.polygon._latlngs, _.assignIn({
-    draggable: true,
-    color: 'black',
-    opacity: 0.1,
-    transform: true,
-    weight: 1,
-    camera
-  }, options));
+  const layer = L.rectangle(
+    camera.polygon._latlngs,
+    _.assignIn(
+      {
+        draggable: true,
+        color: "black",
+        opacity: 0.1,
+        transform: true,
+        weight: 1,
+        camera
+      },
+      options
+    )
+  );
 
   camera._layer = layer;
   camera._layerOptions = options;
   return layer;
 };
 
-
-const difference = function (a, b) {
+const difference = function(a, b) {
   const res = [];
   if (!a) {
     return [];
@@ -53,7 +57,10 @@ const difference = function (a, b) {
   for (let i = 0; i < la; i++) {
     var toAdd = true;
     for (let j = 0; j < lb; j++) {
-      if (a[i] === b[j]) { toAdd = false; break; }
+      if (a[i] === b[j]) {
+        toAdd = false;
+        break;
+      }
     }
     if (toAdd) {
       res.push(a[i]);
@@ -62,18 +69,17 @@ const difference = function (a, b) {
   return res;
 };
 
-
 class _LeafletMap extends React.Component {
-  componentDidMount () {
+  componentDidMount() {
     // Create a map in the div #map
     var mapContainer = ReactDOM.findDOMNode(this.refs.map);
 
-    const editableGroup = this.editableGroup = L.featureGroup([]);
-    const map = this.map = L.map(mapContainer, {
+    const editableGroup = (this.editableGroup = L.featureGroup([]));
+    const map = (this.map = L.map(mapContainer, {
       fadeAnimation: false,
       minZoom: 0,
       maxZoom: 22
-    });
+    }));
 
     map.addLayer(editableGroup);
 
@@ -93,12 +99,12 @@ class _LeafletMap extends React.Component {
     const drawControl = new L.Control.Draw(drawOptions);
     map.addControl(drawControl);
 
-    map.on('draw:created', event => {
+    map.on("draw:created", event => {
       const layer = event.layer;
       this.props.onCreateCameraFromLayer(layer, map.getZoom());
     });
 
-    map.on('draw:edited', event => {
+    map.on("draw:edited", event => {
       const layers = event.layers;
       layers.eachLayer(layer => {
         this.props.onResizeCamera(layer.options.camera, layer);
@@ -109,17 +115,17 @@ class _LeafletMap extends React.Component {
 
     map.setView(this.props.center, this.props.zoom);
 
-    map.on('click', (ev) => {
+    map.on("click", ev => {
       if (!ev.originalEvent.defaultPrevented) {
         this.props.onClickMap(ev.latlng);
       }
     });
 
-    map.on('zoomend', ev => {
+    map.on("zoomend", ev => {
       this.props.onChangeZoom(this.map.getZoom());
     });
 
-    map.on('moveend', ev => {
+    map.on("moveend", ev => {
       this.props.onChangeCenter(this.map.getCenter());
     });
 
@@ -128,19 +134,21 @@ class _LeafletMap extends React.Component {
     this.update();
   }
 
-  loadGpx () {
-    var gpx = '/e.gpx';
-    new L.GPX(gpx, {async: true}).on('loaded', function(e) {
-    }).addTo(this.map);
+  loadGpx() {
+    var gpx = "/e.gpx";
+    new L.GPX(gpx, { async: true })
+      .on("loaded", function(e) {})
+      .addTo(this.map);
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     this.update();
 
     if (
       prevProps.mapboxLogin !== this.props.mapboxLogin ||
       prevProps.mapboxMapId !== this.props.mapboxMapId ||
-      prevProps.mapboxAccessToken !== this.props.mapboxAccessToken) {
+      prevProps.mapboxAccessToken !== this.props.mapboxAccessToken
+    ) {
       this.updateGLMap();
     }
 
@@ -156,31 +164,31 @@ class _LeafletMap extends React.Component {
     }
   }
 
-  updateGLMap () {
+  updateGLMap() {
     const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
 
     if (this.gl) {
       this.map.removeLayer(this.gl);
     }
     this.gl = L.mapboxGL({
-      style: `mapbox://styles/${ mapboxLogin }/${ mapboxMapId }`,
+      style: `mapbox://styles/${mapboxLogin}/${mapboxMapId}`,
       accessToken: mapboxAccessToken
     }).addTo(this.map);
   }
 
-  handleClickLayer (camera, ev) {
+  handleClickLayer(camera, ev) {
     ev.originalEvent.preventDefault();
     ev.originalEvent.stopPropagation();
     this.props.onSelectCamera(camera);
   }
 
-  handleDragLayer (camera, ev) {
+  handleDragLayer(camera, ev) {
     const newLocation = ev.target;
     this.props.onMoveCamera(camera, newLocation);
     this.props.onSelectCamera(camera);
   }
 
-  update () {
+  update() {
     const oldLayers = this.layers;
 
     // update
@@ -188,19 +196,19 @@ class _LeafletMap extends React.Component {
       const isSelected = camera.id == this.props.selectedCameraId;
       var layer = layerFromCamera(camera, {
         isSelected: isSelected,
-        opacity: isSelected ? '0.5' : '0.1',
+        opacity: isSelected ? "0.5" : "0.1",
         weight: isSelected ? 1 : 1,
-        color: (camera.zoom == this.props.zoom - 1) ? 'green' : 'red',
-        className: 'camera-path' + (isSelected ? ' camera-path__selected': '')
+        color: camera.zoom == this.props.zoom - 1 ? "green" : "red",
+        className: "camera-path" + (isSelected ? " camera-path__selected" : "")
       });
 
-      layer.on('add', () => {
-        layer.on('remove', function () {
+      layer.on("add", () => {
+        layer.on("remove", function() {
           layer.transform.disable();
         });
 
-        layer.on('click', this.handleClickLayer.bind(this, camera));
-        layer.on('dragend', this.handleDragLayer.bind(this, camera));
+        layer.on("click", this.handleClickLayer.bind(this, camera));
+        layer.on("dragend", this.handleDragLayer.bind(this, camera));
       });
 
       return layer;
@@ -226,14 +234,17 @@ class _LeafletMap extends React.Component {
     });
   }
 
-  render () {
-    return <div
-      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-      ref='map'></div>;
+  render() {
+    return (
+      <div
+        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+        ref="map"
+      ></div>
+    );
   }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function(state) {
   state = state.present;
   return {
     cameras: state.cameras,
@@ -247,9 +258,9 @@ const mapStateToProps = function (state) {
   };
 };
 
-const mapDispatchToProps = function (dispatch, ownProps) {
+const mapDispatchToProps = function(dispatch, ownProps) {
   return {
-    onMoveCamera: function (camera, newLocation) {
+    onMoveCamera: function(camera, newLocation) {
       const center = newLocation.getBounds().getCenter();
       const update = {
         polygon: newLocation,
@@ -258,31 +269,31 @@ const mapDispatchToProps = function (dispatch, ownProps) {
       dispatch({ type: UPDATE_CAMERA, camera, update });
     },
 
-    onSelectCamera: function (camera) {
+    onSelectCamera: function(camera) {
       dispatch({ type: SELECT_CAMERA, camera });
     },
 
-    onChangeZoom: function (zoom) {
+    onChangeZoom: function(zoom) {
       dispatch({ type: SET_MAP_ZOOM, zoom });
     },
 
-    onChangeCenter: function (center) {
+    onChangeCenter: function(center) {
       dispatch({ type: SET_MAP_VIEW, center: [center.lat, center.lng] });
     },
 
-    onResizeCamera: function (camera, layer) {
+    onResizeCamera: function(camera, layer) {
       const update = Camera.getOptionsFromLayer(layer, camera.zoom, camera.ppi);
       dispatch({ type: UPDATE_CAMERA, camera, update });
     },
 
-    onCreateCameraFromLayer: function (layer, zoom) {
+    onCreateCameraFromLayer: function(layer, zoom) {
       // TODO why -1 ?
       const cameraOptions = Camera.getOptionsFromLayer(layer, zoom - 1);
       const camera = new Camera(cameraOptions);
       dispatch({ type: ADD_CAMERA, camera });
     },
 
-    onClickMap: function (latlng) {
+    onClickMap: function(latlng) {
       var { selectedCameraType } = this;
       if (!selectedCameraType) {
         // dispatch({ type: SELECT_CAMERA, camera: null });
@@ -301,6 +312,9 @@ const mapDispatchToProps = function (dispatch, ownProps) {
   };
 };
 
-const LeafletMap = connect(mapStateToProps, mapDispatchToProps)(_LeafletMap);
+const LeafletMap = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(_LeafletMap);
 
 export default LeafletMap;
