@@ -57,6 +57,7 @@ class _KeyboardShortcuts extends React.Component {
 
   handleKeyDown(ev) {
     if (ev.which == keyboard.BACKSPACE) {
+      ev.preventDefault()
       this.props.onRemoveCameraSelectedCamera();
     }
 
