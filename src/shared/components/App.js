@@ -11,7 +11,7 @@ const ForkMeInGitHub = require('shared/components/ForkMeInGitHub');
 const CameraTypes = require('shared/components/CameraTypes');
 
 if (typeof window !== "undefined") {
-  require('../style.scss');
+  require('../style.css');
 }
 
 class _App extends React.Component {

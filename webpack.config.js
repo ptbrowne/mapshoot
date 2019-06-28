@@ -55,8 +55,7 @@ const config = {
         test: /\.s?css$/,
         loaders: [
           "style",
-          "css",
-          "sass"
+          "css"
         ]
       },
 
