@@ -1,18 +1,17 @@
-const _ = require('lodash/core');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { Camera } = require('shared/models');
-const { connect } = require('react-redux');
+import _ from 'lodash/core';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Camera } from 'shared/models';
+import { connect } from 'react-redux';
 
-const {
+import {
   UPDATE_CAMERA,
   SELECT_CAMERA,
   ADD_CAMERA,
   SELECT_CAMERA_TYPE,
-
   SET_MAP_ZOOM,
   SET_MAP_VIEW,
-} = require('shared/actions');
+} from 'shared/actions';
 
 
 if (typeof window != 'undefined') {
@@ -304,4 +303,4 @@ const mapDispatchToProps = function (dispatch, ownProps) {
 
 const LeafletMap = connect(mapStateToProps, mapDispatchToProps)(_LeafletMap);
 
-module.exports = LeafletMap;
+export default LeafletMap;

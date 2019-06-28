@@ -188,7 +188,7 @@ Camera.fromJSON = function (j) {
   }
 };
 
-module.exports = {
+export {
   Camera,
   CameraType
 };

@@ -1,14 +1,12 @@
-const { connect } = require('react-redux');
-const { introJs } = require('intro.js');
-
-const LeafletMap = require('shared/components/LeafletMap');
-const Results = require('shared/components/Results');
-const Settings = require('shared/components/Settings');
-const ImportExport = require('shared/components/ImportExport');
-const KeyboardShortcuts = require('shared/components/KeyboardShortcuts');
-const ForkMeInGitHub = require('shared/components/ForkMeInGitHub');
-
-const CameraTypes = require('shared/components/CameraTypes');
+import { connect } from 'react-redux';
+import { introJs } from 'intro.js';
+import LeafletMap from 'shared/components/LeafletMap';
+import Results from 'shared/components/Results';
+import Settings from 'shared/components/Settings';
+import ImportExport from 'shared/components/ImportExport';
+import KeyboardShortcuts from 'shared/components/KeyboardShortcuts';
+import ForkMeInGitHub from 'shared/components/ForkMeInGitHub';
+import CameraTypes from 'shared/components/CameraTypes';
 
 if (typeof window !== "undefined") {
   require('../style.css');
@@ -76,4 +74,4 @@ const mapDispatchToProps = function (dispatch, ownProps) {
 
 const App = connect(null, mapDispatchToProps)(_App);
 
-module.exports = App;
+export default App;

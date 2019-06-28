@@ -1,6 +1,6 @@
-const App = require('shared/components/App');
-const store = require('shared/store');
-const { Provider } = require('react-redux');
+import App from 'shared/components/App';
+import store from 'shared/store';
+import { Provider } from 'react-redux';
 
 class AppWithStore extends React.Component {
   render () {
@@ -8,6 +8,6 @@ class AppWithStore extends React.Component {
       <App />
     </Provider>;
   }
-};
+}
 
 export default AppWithStore;

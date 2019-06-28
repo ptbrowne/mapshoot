@@ -1,16 +1,18 @@
-const React = require('react');
-const _ = require('lodash/core');
+import React from 'react';
+import _ from 'lodash/core';
+import { connect } from 'react-redux';
+import { ActionTypes } from 'redux-undo';
+import ActionHistory from 'shared/components/ActionHistory';
+import { CameraType } from 'shared/models';
 
-const { connect } = require('react-redux');
-const { ActionTypes } = require('redux-undo');
-
-const ActionHistory = require('shared/components/ActionHistory');
-const { CameraType } = require('shared/models');
-
-const { 
-  CLEAR_CAMERAS, SELECT_CAMERA, UPDATE_CAMERA,
-  ADD_CAMERA_TYPE, REMOVE_CAMERA, SET_MAP_VIEW
-} = require('shared/actions');
+import {
+  CLEAR_CAMERAS,
+  SELECT_CAMERA,
+  UPDATE_CAMERA,
+  ADD_CAMERA_TYPE,
+  REMOVE_CAMERA,
+  SET_MAP_VIEW,
+} from 'shared/actions';
 
 class _Snapshots extends React.Component {
   render () {
@@ -177,4 +179,4 @@ class _Results extends React.Component {
 
 const Results = connect(state => ({ mapZoom: state.present.map.zoom }), null)(_Results);
 
-module.exports = Results;
+export default Results;

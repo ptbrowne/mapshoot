@@ -1,5 +1,5 @@
-const { connect } = require('react-redux');
-const { UPDATE_SETTINGS } = require('shared/actions');
+import { connect } from 'react-redux';
+import { UPDATE_SETTINGS } from 'shared/actions';
 
 class _Settings extends React.Component {
   constructor (props) {
@@ -45,7 +45,7 @@ class _Settings extends React.Component {
           className='btn--green'>Save</button> : null }
     </div>;
   }
-};
+}
 
 const mapStateToProps = function (state) {
   state = state.present;
@@ -64,4 +64,4 @@ const mapDispatchToProps = function (dispatch) {
 
 const Settings = connect(mapStateToProps, mapDispatchToProps)(_Settings);
 
-module.exports = Settings;
+export default Settings;

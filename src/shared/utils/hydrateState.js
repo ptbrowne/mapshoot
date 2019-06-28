@@ -1,7 +1,7 @@
-const _ = require('lodash/core');
-const { CameraType, Camera } = require('shared/models');
+import _ from 'lodash/core';
+import { CameraType, Camera } from 'shared/models';
 
-module.exports = function (state) {
+export default function (state) {
   state.cameraTypes = _.map(state.cameraTypes, (ct) => new CameraType(ct));
   state.cameras = _.map(state.cameras, (jsonCamera) => Camera.fromJSON(jsonCamera));
 };

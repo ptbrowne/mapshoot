@@ -1,4 +1,4 @@
-const findIndex = require('lodash/findIndex');
+import findIndex from 'lodash/findIndex';
 
 const removeAtIndex = function (arr, i)  {
   if (i < 0) {
@@ -25,7 +25,7 @@ const findAndUpdate = function (arr, finder, updater) {
   }
 };
 
-module.exports = {
+export {
   removeAtIndex,
   replaceAtIndex,
   findAndUpdate

@@ -1,7 +1,7 @@
-const _ = require('lodash/core');
-const React = require('react');
-const { connect } = require('react-redux');
-const { SELECT_CAMERA_TYPE, REMOVE_CAMERA_TYPE } = require('shared/actions'); 
+import _ from 'lodash/core';
+import React from 'react';
+import { connect } from 'react-redux';
+import { SELECT_CAMERA_TYPE, REMOVE_CAMERA_TYPE } from 'shared/actions';
 const defaultStyle = {
   marginRight: '0.25rem',
   marginBottom: '0.25rem',
@@ -56,4 +56,4 @@ const CameraTypeSelector = connect(
   mapDispatchToProps
 )(_CameraTypeSelector);
 
-module.exports = CameraTypeSelector;
+export default CameraTypeSelector;

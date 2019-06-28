@@ -17,7 +17,7 @@ const SET_MAP_ZOOM = 'SET_MAP_ZOOM';
 const SET_MAP_CENTER = 'SET_MAP_CENTER';
 const SET_MAP_VIEW = 'SET_MAP_VIEW';
 
-module.exports = {
+export {
   ADD_CAMERA,
   REMOVE_CAMERA,
   CLEAR_CAMERAS,

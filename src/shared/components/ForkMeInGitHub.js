@@ -8,7 +8,7 @@ const style = {
   transform: 'rotate(-45deg)'
 };
 
-module.exports = function () {
+export default function () {
   return <div>
     <a href="https://github.com/ptbrowne/mapshoot" className="github-corner" aria-label="View source on Github">
       <svg width="80" height="80" viewBox="0 0 250 250" style={ style } aria-hidden="true">

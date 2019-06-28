@@ -1,10 +1,9 @@
-const _ = require('lodash/core');
-const React = require('react');
-const CameraTypeSelector = require('shared/components/CameraTypeSelector');
-const { connect } = require('react-redux');
-const { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } = require('shared/actions');
-
-const { CameraType } = require('shared/models');
+import _ from 'lodash/core';
+import React from 'react';
+import CameraTypeSelector from 'shared/components/CameraTypeSelector';
+import { connect } from 'react-redux';
+import { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } from 'shared/actions';
+import { CameraType } from 'shared/models';
 
 class _CameraTypes extends React.Component  {
   constructor () {
@@ -70,4 +69,4 @@ const CameraTypes = connect(
   mapDispatchToProps
 )(_CameraTypes);
 
-module.exports = CameraTypes;
+export default CameraTypes;

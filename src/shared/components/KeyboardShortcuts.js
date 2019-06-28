@@ -1,8 +1,8 @@
-const _ = require('lodash/core');
-const { connect } = require('react-redux');
-const { SELECT_CAMERA_TYPE, REMOVE_CAMERA } = require('shared/actions');
-const { ActionTypes } = require('redux-undo');
-const keyboard = require('shared/utils/keyboard');
+import _ from 'lodash/core';
+import { connect } from 'react-redux';
+import { SELECT_CAMERA_TYPE, REMOVE_CAMERA } from 'shared/actions';
+import { ActionTypes } from 'redux-undo';
+import keyboard from 'shared/utils/keyboard';
 
 const Key = function (props) {
   return <span className='key'>{ props.children }</span>;
@@ -132,4 +132,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(_KeyboardShortcuts);
+export default connect(mapStateToProps, mapDispatchToProps)(_KeyboardShortcuts);

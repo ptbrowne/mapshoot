@@ -1,7 +1,8 @@
-const _ = require('lodash/core');
-const { combineReducers, createStore, applyMiddleware } = require('redux');
-const hydrateState = require('shared/utils/hydrateState');
-const {
+import _ from 'lodash/core';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import hydrateState from 'shared/utils/hydrateState';
+
+import {
   ADD_CAMERA,
   REMOVE_CAMERA,
   SELECT_CAMERA,
@@ -14,14 +15,11 @@ const {
   UPDATE_SETTINGS,
   REPLACE_STATE,
   SET_MAP_ZOOM,
-  SET_MAP_VIEW
-} = require('shared/actions');
+  SET_MAP_VIEW,
+} from 'shared/actions';
 
-const reduxUndo = require('redux-undo');
-const includeAction = reduxUndo.includeAction;
-const undoable = reduxUndo.default;
-
-const { removeAtIndex, findAndUpdate } = require('shared/utils/immutable');
+import undoable, { includeAction } from 'redux-undo';
+import { removeAtIndex, findAndUpdate } from 'shared/utils/immutable';
 
 const listReducer = function ({ add, remove, reset, item }) {
   return function (state, action) {
@@ -222,4 +220,4 @@ const logger = store => next => action => {
 const store = createStore(reducer, applyMiddleware(logger, save));
 
 
-module.exports = store;
+export default store;

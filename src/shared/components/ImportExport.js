@@ -1,7 +1,7 @@
-const { connect } = require('react-redux');
-const hydrateState = require('shared/utils/hydrateState');
-const { REPLACE_STATE } = require('shared/actions');
-const keyboard = require('shared/utils/keyboard');
+import { connect } from 'react-redux';
+import hydrateState from 'shared/utils/hydrateState';
+import { REPLACE_STATE } from 'shared/actions';
+import keyboard from 'shared/utils/keyboard';
 
 class _ImportExport extends React.Component {
   render () {
@@ -85,4 +85,4 @@ const mapDispatchToProps = function (dispatch) {
 
 const ImportExport = connect(mapStateToProps, mapDispatchToProps)(_ImportExport);
 
-module.exports = ImportExport;
+export default ImportExport;

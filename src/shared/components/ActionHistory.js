@@ -1,6 +1,6 @@
-const _ = require('lodash/core');
-const { connect } = require('react-redux');
-const { ActionCreators } = require('redux-undo');
+import _ from 'lodash/core';
+import { connect } from 'react-redux';
+import { ActionCreators } from 'redux-undo';
 
 class _ActionHistory extends React.Component {
   render () {
@@ -24,4 +24,4 @@ const ActionHistory = connect(state => ({
   }
 }))(_ActionHistory);
 
-module.exports = ActionHistory;
+export default ActionHistory;
