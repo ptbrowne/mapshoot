@@ -71,12 +71,10 @@ a {
   padding-right: 0.5rem;
   margin-bottom: 1rem;
   background: rgba(255, 255, 255, 0.1);
-
-  h3 {
-    margin-top: 1rem;
-  }
 }
-
+.panel-section h3 {
+  margin-top: 1rem;
+}
 .tools-panel {
   width: 150px;
 }
@@ -123,6 +121,7 @@ input[type="file"],
   display: inline-block;
   cursor: pointer;
   margin: 0.125rem;
+  color: white;
 }
 
 p {
@@ -138,40 +137,32 @@ p {
 }
 
 .btn--purple {
-  $bg: #8a8acb;
-  background: $bg;
-
-  &:hover {
-    background: lighten($bg, 10%);
-  }
+  background: #8a8acb;
+}
+.btn--purple:hover {
+  background: #adaddb;
 }
 
 .btn--red {
-  $bg: crimson;
-  background: $bg;
-
-  &:hover {
-    background: lighten($bg, 10%);
-  }
+  background: crimson;
+}
+.btn--red:hover {
+  background: #ed365b;
 }
 
 .bg--red {
-  $bg: crimson;
-  background: $bg;
+  background: crimson;
 }
 
 .bg--green {
-  $bg: #5caf36;
-  background: $bg;
+  background: #5caf36;
 }
 
 .btn--green {
-  $bg: #5caf36;
-  background: $bg;
-
-  &:hover {
-    background: lighten($bg, 10%);
-  }
+  background: #5caf36;
+}
+.btn--green:hover {
+  background: #75c94f;
 }
 
 .section__actions {
@@ -180,15 +171,14 @@ p {
 
 /* INPUTS */
 input {
-  $bg: rgba(255, 255, 255, 0.1);
-  background: $bg;
+  background: rgba(255, 255, 255, 0.1);
   border: 0;
   border-radius: 2px;
   padding: 2px;
-
-  &:hover {
-    background: lighten($bg, 10%);
-  }
+  color: white;
+}
+input:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* TOOLS */
@@ -221,9 +211,7 @@ input {
   opacity: 1;
   transform: scale(1.1);
 }
-
-.camera-type__selected,
-.camera-type__selected:hover {
+.camera-type__selected, .camera-type__selected:hover {
   color: white;
   background: rgba(255, 255, 255, 0.5);
 }
