@@ -145,8 +145,7 @@ class _LeafletMap extends React.Component {
     this.update();
 
     if (
-      prevProps.mapboxLogin !== this.props.mapboxLogin ||
-      prevProps.mapboxMapId !== this.props.mapboxMapId ||
+      prevProps.mapboxStyleURL !== this.props.mapboxStyleURL ||
       prevProps.mapboxAccessToken !== this.props.mapboxAccessToken
     ) {
       this.updateGLMap();
@@ -165,13 +164,15 @@ class _LeafletMap extends React.Component {
   }
 
   updateGLMap() {
-    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
+    const { mapboxStyleURL, mapboxAccessToken } = this.props;
 
     if (this.gl) {
       this.map.removeLayer(this.gl);
     }
+
+    console.log('update GL map', mapboxStyleURL)
     this.gl = L.mapboxGL({
-      style: `mapbox://styles/${mapboxLogin}/${mapboxMapId}`,
+      style: mapboxStyleURL,
       accessToken: mapboxAccessToken
     }).addTo(this.map);
   }
@@ -252,8 +253,7 @@ const mapStateToProps = function(state) {
     selectedCameraType: state.selectedCameraType,
     zoom: state.map.zoom,
     center: state.map.center,
-    mapboxLogin: state.settings.mapboxLogin,
-    mapboxMapId: state.settings.mapboxMapId,
+    mapboxStyleURL: state.settings.mapboxStyleURL,
     mapboxAccessToken: state.settings.mapboxAccessToken
   };
 };

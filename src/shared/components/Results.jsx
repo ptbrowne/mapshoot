@@ -13,11 +13,13 @@ import {
   REMOVE_CAMERA,
   SET_MAP_VIEW
 } from "shared/actions";
+import utils from './utils'
 
 class _Snapshots extends React.Component {
   render() {
     const { cameras, onClearCameras, onSelectCamera } = this.props;
-    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props;
+    const { mapboxStyleURL, mapboxAccessToken } = this.props;
+    const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL)
     return cameras.length ? (
       <div className="panel-section">
         <h2>
@@ -31,7 +33,7 @@ class _Snapshots extends React.Component {
               onClick={onSelectCamera.bind(null, camera)}
               src={camera.getRenderString(
                 mapboxLogin,
-                mapboxMapId,
+                mapboxStyleId,
                 mapboxAccessToken
               )}
             />
@@ -53,8 +55,7 @@ const Snapshots = connect(
     const { settings, cameras } = state;
     return {
       cameras: cameras,
-      mapboxLogin: settings.mapboxLogin,
-      mapboxMapId: settings.mapboxMapId,
+      mapboxStyleURL: settings.mapboxStyleURL,
       mapboxAccessToken: settings.mapboxAccessToken
     };
   },
@@ -89,11 +90,12 @@ class _SelectedCamera extends React.Component {
       onViewZoom,
       onSetZoom
     } = this.props;
-    const { mapboxMapId, mapboxAccessToken, mapboxLogin } = this.props.settings;
+    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings;
+    const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL)
     const url = selectedCamera
       ? selectedCamera.getRenderString(
           mapboxLogin,
-          mapboxMapId,
+          mapboxStyleId,
           mapboxAccessToken
         )
       : null;

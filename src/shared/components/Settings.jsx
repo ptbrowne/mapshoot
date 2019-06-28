@@ -1,17 +1,17 @@
 import { connect } from "react-redux";
 import { UPDATE_SETTINGS } from "shared/actions";
+import utils from "./utils";
 
 class _Settings extends React.Component {
   constructor(props) {
     super(props);
-    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.props.settings;
-    this.state = { mapboxLogin, mapboxMapId, mapboxAccessToken };
+    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings;
+    this.state = { mapboxStyleURL, mapboxAccessToken };
   }
 
   handleUpdateSettings(settingName, ev) {
     this.props.onUpdateSettings({
-      mapboxLogin: this.state.mapboxLogin,
-      mapboxMapId: this.state.mapboxMapId,
+      mapboxStyleURL: this.state.mapboxStyleURL,
       mapboxAccessToken: this.state.mapboxAccessToken
     });
   }
@@ -24,25 +24,24 @@ class _Settings extends React.Component {
 
   render() {
     const initialSettings = this.props.settings;
-    const { mapboxLogin, mapboxMapId, mapboxAccessToken } = this.state;
+    const { mapboxStyleURL, mapboxAccessToken } = this.state;
+
+    const {
+      mapboxStyleURL: mapboxStyleURLSetting,
+      mapboxAccessToken: mapboxAccessTokenSetting
+    } = this.props.settings;
     const shouldSave =
-      mapboxLogin !== initialSettings.mapboxLogin ||
-      mapboxMapId !== initialSettings.mapboxMapId ||
-      mapboxAccessToken !== initialSettings.mapboxAccessToken;
+      mapboxStyleURL !== mapboxStyleURLSetting ||
+      mapboxAccessToken !== mapboxAccessTokenSetting;
+    const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL);
 
     return (
       <div>
         <h3>mapbox</h3>
-        login{" "}
+        style url{" "}
         <input
-          onChange={this.handleChangeSetting.bind(this, "mapboxLogin")}
-          value={mapboxLogin}
-        />
-        <br />
-        map id{" "}
-        <input
-          onChange={this.handleChangeSetting.bind(this, "mapboxMapId")}
-          value={mapboxMapId}
+          onChange={this.handleChangeSetting.bind(this, "mapboxStyleURL")}
+          value={mapboxStyleURL}
         />
         <br />
         access token{" "}
@@ -50,6 +49,17 @@ class _Settings extends React.Component {
           onChange={this.handleChangeSetting.bind(this, "mapboxAccessToken")}
           value={mapboxAccessToken}
         />
+        <br />
+        <a
+          target='_blank'
+          href={
+            !mapboxLogin
+              ? "https://studio.mapbox.com/styles/"
+              : `https://studio.mapbox.com/styles/${mapboxLogin}/${mapboxStyleId}/edit/#10.81/49.4738/2.8827`
+          }
+        >
+          Open Mapbox Studio
+        </a>
         <br />
         {shouldSave ? (
           <button

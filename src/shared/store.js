@@ -47,10 +47,9 @@ const getInitialStore = function() {
     selectedCamera: null,
     selectedCameraType: null,
     settings: {
-      mapboxLogin: "mapbox",
+      mapboxStyleURL: "mapbox://mapbox/styles/streets-v9",
       mapboxAccessToken:
-        "pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA",
-      mapboxMapId: "streets-v9"
+        "pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA"
     }
   };
   const store = localStorage.getItem(LS_KEY);

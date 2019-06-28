@@ -70,6 +70,7 @@ const CameraPanelSection = () => {
 
 class _App extends React.Component {
   render() {
+    const { mapboxStyleURL } = this.props
     return (
       <div>
         <div className="panel-container">
@@ -107,6 +108,10 @@ class _App extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  mapboxStyleURL: state.present.settings.mapboxStyleURL
+})
+
 const mapDispatchToProps = function(dispatch, ownProps) {
   return {
     onClickHelp() {
@@ -125,7 +130,7 @@ const mapDispatchToProps = function(dispatch, ownProps) {
 };
 
 const App = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(_App);
 
