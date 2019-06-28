@@ -21,21 +21,20 @@ const config = {
   },
 
   resolve: {
-    root: [
+    modules: [
       path.resolve('./src'),
       path.resolve('./node_modules')
     ]
   },
 
   module: {
-    preLoaders: [{
+    rules: [{
+      enforce: 'pre',
       test: /\.js$/, // include .js files
       include: SRC_DIR, // exclude any and all files in the node_modules folder
       exclude: /vendor\/.*/,
       loader: "eslint-loader"
-    }],
-
-    loaders: [
+    },
       // json
       {
         test: /\.json$/,
@@ -46,7 +45,7 @@ const config = {
       // transpile JS
       {
         test: /\.jsx?$/,
-        loaders: ['babel?cacheDirectory', 'react-hot'],
+        loaders: ['babel-loader?cacheDirectory', 'react-hot-loader'],
         include: SRC_DIR
       },
 
@@ -54,8 +53,8 @@ const config = {
       {
         test: /\.s?css$/,
         loaders: [
-          "style",
-          "css"
+          "style-loader",
+          "css-loader"
         ]
       },
 

@@ -18,7 +18,8 @@
     "react-router": "^2.0.1",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.0",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "2",
+    "webpack-dev-server": "2"
   },
   "scripts": {
     "build": "scripts/build",
@@ -28,6 +29,7 @@
     "deploy": "git push origin `git subtree split --prefix dist master`:gh-pages --force"
   },
   "dependencies": {
+    "babel-core": "^6.26.3",
     "babel-eslint": "^7.0.0",
     "babel-plugin-lodash": "^3.2.9",
     "eslint": "^3.8.1",
