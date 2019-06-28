@@ -12,6 +12,62 @@ if (typeof window !== "undefined") {
   require("../style.css");
 }
 
+const HelpPanelSection = () => {
+  return (
+    <div className="panel-section" style={{ background: "transparent" }}>
+      <button className="btn btn--purple" onClick={this.props.onClickHelp}>
+        Help <i className="fa fa-question-circle" />
+      </button>
+    </div>
+  );
+};
+
+const ImportExportPanelSection = () => {
+  return (
+    <div
+      className="panel-section"
+      data-position="right"
+      data-intro="Save your cameras and load them later on another computer. On your computer, your cameras are auto-saved"
+    >
+      <h2>
+        <i className="fa fa-fw fa-file" /> Save/Load
+      </h2>
+      <ImportExport />
+    </div>
+  );
+};
+
+const SettingsPanelSection = () => {
+  return (
+    <div
+      className="panel-section"
+      data-position="right"
+      data-intro='
+          To add features, you need to create a <a href="http://mapbox.com">Mapbox</a> account and <a href="https://www.mapbox.com/help/getting-started-mapbox-studio-2/">create a style</a>.'
+    >
+      <h2>
+        <i className="fa fa-fw fa-gear" /> Settings
+      </h2>
+      <Settings />
+    </div>
+  );
+};
+
+const CameraPanelSection = () => {
+  return (
+    <div
+      className="panel-section"
+      data-position="right"
+      data-intro="Create a camera template if you want to reuse the same format for many shots."
+    >
+      <h2>
+        <i className="fa fa-fw fa-camera-retro" /> Camera templates
+      </h2>
+      <CameraTypes />
+    </div>
+  );
+};
+
 class _App extends React.Component {
   render() {
     return (
@@ -28,53 +84,15 @@ class _App extends React.Component {
               </span>
               &nbsp;MapShoot
             </h1>
-            <div
-              className="panel-section"
-              data-position="right"
-              data-intro="Create a camera template if you want to reuse the same format for many shots."
-            >
-              <h2>
-                <i className="fa fa-fw fa-camera-retro" /> Camera templates
-              </h2>
-              <CameraTypes />
-            </div>
 
-            <div
-              className="panel-section"
-              data-position="right"
-              data-intro="Save your cameras and load them later on another computer. On your computer, your cameras are auto-saved"
-            >
-              <h2>
-                <i className="fa fa-fw fa-file" /> Save/Load
-              </h2>
-              <ImportExport onImport={this.handleImportData} />
-            </div>
+            <CameraPanelSection />
+            <ImportExportPanelSection />
 
-            <div
-              className="panel-section"
-              data-position="right"
-              data-intro='
-          To add features, you need to create a <a href="http://mapbox.com">Mapbox</a> account and <a href="https://www.mapbox.com/help/getting-started-mapbox-studio-2/">create a style</a>.'
-            >
-              <h2>
-                <i className="fa fa-fw fa-gear" /> Settings
-              </h2>
-              <Settings />
-            </div>
+            <SettingsPanelSection />
 
             <KeyboardShortcuts />
 
-            <div
-              className="panel-section"
-              style={{ background: "transparent" }}
-            >
-              <button
-                className="btn btn--purple"
-                onClick={this.props.onClickHelp}
-              >
-                Help <i className="fa fa-question-circle" />
-              </button>
-            </div>
+            <HelpPanelSection />
           </div>
           <div className="panel map-panel">
             <LeafletMap ref="map" />
