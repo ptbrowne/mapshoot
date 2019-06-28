@@ -12,10 +12,10 @@ if (typeof window !== "undefined") {
   require("../style.css");
 }
 
-const HelpPanelSection = () => {
+const HelpPanelSection = ({ onClickHelp }) => {
   return (
     <div className="panel-section" style={{ background: "transparent" }}>
-      <button className="btn btn--purple" onClick={this.props.onClickHelp}>
+      <button className="btn btn--purple" onClick={onClickHelp}>
         Help <i className="fa fa-question-circle" />
       </button>
     </div>
@@ -92,7 +92,7 @@ class _App extends React.Component {
 
             <KeyboardShortcuts />
 
-            <HelpPanelSection />
+            <HelpPanelSection onClickHelp={this.props.onClickHelp} />
           </div>
           <div className="panel map-panel">
             <LeafletMap ref="map" />
