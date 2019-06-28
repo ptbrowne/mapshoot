@@ -52,7 +52,7 @@ const config = {
 
       // sass files
       {
-        test: /\.s?css$/,
+        test: /\.css$/,
         loaders: [
           "style-loader",
           "css-loader"
@@ -75,23 +75,14 @@ const config = {
     fs: "empty"
   },
 
-  devtool: isProd ? null : 'cheap-source-map',
+  devtool: isProd ? false : 'cheap-source-map',
 
   plugins: [
-    new webpack.DefinePlugin({
-      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-      __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-      }
-    }),
-
+    new webpack.EnvironmentPlugin({'NODE_ENV': 'development'}),
     new webpack.ProvidePlugin({
       React: 'react'
     })
-  ].concat(isProd ? [
-    new webpack.optimize.UglifyJsPlugin({ minimize: true, sourceMap: false }) 
-  ] : [])
+  ]
 };
 
 module.exports = config;
