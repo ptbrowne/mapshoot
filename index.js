@@ -1,6 +1,5 @@
 'use strict';
 
-var piping = require('piping');
 require("babel-register")({});
 
 var server = require('./server');
