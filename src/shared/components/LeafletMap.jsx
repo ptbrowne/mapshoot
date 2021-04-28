@@ -170,7 +170,6 @@ class _LeafletMap extends React.Component {
       this.map.removeLayer(this.gl);
     }
 
-    console.log('update GL map', mapboxStyleURL)
     this.gl = L.mapboxGL({
       style: mapboxStyleURL,
       accessToken: mapboxAccessToken
