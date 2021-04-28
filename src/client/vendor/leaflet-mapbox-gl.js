@@ -1,5 +1,6 @@
 /* global mapboxgl */
 
+/* From https://bl.ocks.org/w8r/26b4f1a6ff0785a71c290d798337689a */
 L.MapboxGL = L.Layer.extend({
     options: {
       updateInterval: 32
@@ -113,8 +114,8 @@ L.MapboxGL = L.Layer.extend({
         this._glMap.transform.latRange = null;
 
         // treat child <canvas> element like L.ImageOverlay
-        L.DomUtil.addClass(this._glMap._canvas.canvas, 'leaflet-image-layer');
-        L.DomUtil.addClass(this._glMap._canvas.canvas, 'leaflet-zoom-animated');
+        L.DomUtil.addClass(this._glMap._canvas, 'leaflet-image-layer');
+        L.DomUtil.addClass(this._glMap._canvas, 'leaflet-zoom-animated');
     },
 
     _update: function (e) {
@@ -163,7 +164,7 @@ L.MapboxGL = L.Layer.extend({
       var scale = this._map.getZoomScale(e.zoom),
           offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
 
-      L.DomUtil.setTransform(this._glMap._canvas.canvas, offset.subtract(this._offset || L.point(0,0)), scale);
+      L.DomUtil.setTransform(this._glMap._canvas, offset.subtract(this._offset || L.point(0,0)), scale);
     },
 
     _zoomStart: function () {
@@ -178,7 +179,7 @@ L.MapboxGL = L.Layer.extend({
       // update the map on the next available frame to avoid stuttering
       L.Util.requestAnimFrame(function () {
         // reset the scale and offset
-        L.DomUtil.setTransform(this._glMap._canvas.canvas, offset, 1);
+        L.DomUtil.setTransform(this._glMap._canvas, offset, 1);
 
         // enable panning once the gl map is ready again
         this._glMap.once('moveend', L.Util.bind(function () {
