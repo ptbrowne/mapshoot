@@ -14,9 +14,9 @@ import {
 } from "../actions";
 
 
-import "../../client/vendor/leaflet-mapbox-gl"
-import "../../client/vendor/L.Path.Transform"
-import "../../client/vendor/L.Path.Drag"
+import "../vendor/leaflet-mapbox-gl"
+import "../vendor/L.Path.Transform"
+import "../vendor/L.Path.Drag"
 
 
 const layerFromCamera = function(camera, options) {

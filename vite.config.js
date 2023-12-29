@@ -14,11 +14,6 @@ export default defineConfig({
     outDir: '../dist',
     sourcemap: true
   },
-  resolve: {
-    alias: {
-      shared: path.resolve(__dirname, './src/shared')
-    }
-  },
   server: {
     port: 3000
   },

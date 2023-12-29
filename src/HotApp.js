@@ -1,3 +1,3 @@
 import { hot } from "react-hot-loader/root";
-import AppWithStore from "../shared/AppWithStore";
+import AppWithStore from "./AppWithStore";
 export default hot(AppWithStore);
