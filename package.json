@@ -14,9 +14,9 @@
     "webpack-dev-server": "^3.7.2"
   },
   "scripts": {
-    "build": "vite build src/",
+    "build": "vite build -c vite.config.js src/",
     "build-commit-push": "npm run build; git add dist; git commit -m 'build'; git push origin master",
-    "start": "vite src/",
+    "start": "vite -c vite.config.js src/",
     "test": "karma start karma.conf.js --reporters dots,notify,html",
     "deploy": "git push origin `git subtree split --prefix dist master`:gh-pages --force"
   },
