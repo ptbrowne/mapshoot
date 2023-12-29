@@ -1,11 +1,97 @@
 {
-  "parserOptions": {
-      "ecmaVersion": 7,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true,
-        "modules": true
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "plugins": ["@typescript-eslint", "unused-imports", "react-refresh", "import"],
+  "extends": ["eslint:recommended", "prettier"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
   },
-  "extends": ["prettier"]
+  "globals": {
+    "describe": true,
+    "it": true,
+    "expect": true,
+
+    // Utility types from typescript
+    "Omit": true,
+    "Pick": true,
+    "Record": true,
+    "JSX": true
+  },
+  "rules": {
+    "no-debugger": "off",
+    "camelcase": "off", // Some of the identifier from winancial are camelcased
+    "no-use-before-define": "off", // Otherwise we have false positive "React used before used" errors
+    "no-underscore-dangle": "off",
+    "no-nested-ternary": "off",
+    "arrow-body-style": "off",
+    "comma-dangle": "off",
+    "import/no-unresolved": "off",
+    "unused-imports/no-unused-imports": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/order": [
+      2,
+      {
+        "alphabetize": { "order": "asc" },
+        "newlines-between": "always",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "src/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"]
+      }
+    ],
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-console": "off",
+    "no-param-reassign": "off",
+    "no-plusplus": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/prop-types": "off", // We use typescript
+    "semi": ["warn", "never"],
+    "no-else-return": "off",
+    "consistent-return": "off",
+    "react-refresh/only-export-components": "off" // Turn to error when there are problems with hot reload
+  }
 }
