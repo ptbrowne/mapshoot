@@ -1,8 +1,8 @@
 import _ from "lodash/core";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Camera } from "shared/models";
 import { connect } from "react-redux";
+import { Camera } from "../models";
 
 import {
   UPDATE_CAMERA,
@@ -11,13 +11,13 @@ import {
   SELECT_CAMERA_TYPE,
   SET_MAP_ZOOM,
   SET_MAP_VIEW
-} from "shared/actions";
+} from "../actions";
 
-if (typeof window != "undefined") {
-  require("client/vendor/leaflet-mapbox-gl");
-  require("client/vendor/L.Path.Transform");
-  require("client/vendor/L.Path.Drag"); // patched version
-}
+
+import "../../client/vendor/leaflet-mapbox-gl"
+import "../../client/vendor/L.Path.Transform"
+import "../../client/vendor/L.Path.Drag"
+
 
 const layerFromCamera = function(camera, options) {
   if (camera._layer && _.isEqual(camera._layerOptions, options)) {

@@ -1,8 +1,11 @@
+import React from 'react'
+
 import _ from "lodash/core";
 import { connect } from "react-redux";
-import { SELECT_CAMERA_TYPE, REMOVE_CAMERA } from "shared/actions";
 import { ActionTypes } from "redux-undo";
-import keyboard from "shared/utils/keyboard";
+
+import { SELECT_CAMERA_TYPE, REMOVE_CAMERA } from "../actions";
+import keyboard from "../utils/keyboard";
 
 const Key = function(props) {
   return <span className="key">{props.children}</span>;

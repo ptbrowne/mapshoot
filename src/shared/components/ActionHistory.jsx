@@ -1,3 +1,4 @@
+import React from 'react'
 import _ from "lodash/core";
 import { connect } from "react-redux";
 import { ActionCreators } from "redux-undo";

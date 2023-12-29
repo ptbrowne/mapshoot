@@ -1,7 +1,9 @@
 import _ from "lodash/core";
 import React from "react";
 import { connect } from "react-redux";
-import { SELECT_CAMERA_TYPE, REMOVE_CAMERA_TYPE } from "shared/actions";
+
+import { SELECT_CAMERA_TYPE, REMOVE_CAMERA_TYPE } from "../actions";
+
 const defaultStyle = {
   marginRight: "0.25rem",
   marginBottom: "0.25rem",

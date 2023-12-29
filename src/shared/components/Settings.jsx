@@ -1,5 +1,7 @@
+import React from 'react'
+
 import { connect } from "react-redux";
-import { UPDATE_SETTINGS } from "shared/actions";
+import { UPDATE_SETTINGS } from "../actions";
 import utils from "./utils";
 
 class _Settings extends React.Component {

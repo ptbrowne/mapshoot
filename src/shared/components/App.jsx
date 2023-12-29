@@ -1,16 +1,16 @@
+import React from 'react'
+
 import { connect } from "react-redux";
 import { introJs } from "intro.js";
-import LeafletMap from "shared/components/LeafletMap";
-import Results from "shared/components/Results";
-import Settings from "shared/components/Settings";
-import ImportExport from "shared/components/ImportExport";
-import KeyboardShortcuts from "shared/components/KeyboardShortcuts";
-import ForkMeInGitHub from "shared/components/ForkMeInGitHub";
-import CameraTypes from "shared/components/CameraTypes";
+import LeafletMap from "./LeafletMap";
+import Results from "./Results";
+import Settings from "./Settings";
+import ImportExport from "./ImportExport";
+import KeyboardShortcuts from "./KeyboardShortcuts";
+import ForkMeInGitHub from "./ForkMeInGitHub";
+import CameraTypes from "./CameraTypes";
 
-if (typeof window !== "undefined") {
-  require("../style.css");
-}
+  import "../style.css";
 
 const HelpPanelSection = ({ onClickHelp }) => {
   return (

@@ -1,9 +1,9 @@
 import _ from "lodash/core";
 import React from "react";
-import CameraTypeSelector from "shared/components/CameraTypeSelector";
+import CameraTypeSelector from "./CameraTypeSelector";
 import { connect } from "react-redux";
-import { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } from "shared/actions";
-import { CameraType } from "shared/models";
+import { SELECT_CAMERA_TYPE, ADD_CAMERA_TYPE } from "../actions";
+import { CameraType } from "../models";
 
 class _CameraTypes extends React.Component {
   constructor() {

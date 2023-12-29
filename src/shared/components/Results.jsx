@@ -2,8 +2,8 @@ import React from "react";
 import _ from "lodash/core";
 import { connect } from "react-redux";
 import { ActionTypes } from "redux-undo";
-import ActionHistory from "shared/components/ActionHistory";
-import { CameraType } from "shared/models";
+import ActionHistory from "../components/ActionHistory";
+import { CameraType } from "../models";
 
 import {
   CLEAR_CAMERAS,
@@ -12,7 +12,7 @@ import {
   ADD_CAMERA_TYPE,
   REMOVE_CAMERA,
   SET_MAP_VIEW
-} from "shared/actions";
+} from "../actions";
 import utils from './utils'
 
 class _Snapshots extends React.Component {

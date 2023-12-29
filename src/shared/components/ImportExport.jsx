@@ -1,7 +1,10 @@
+import React from 'react'
+
 import { connect } from "react-redux";
-import hydrateState from "shared/utils/hydrateState";
-import { REPLACE_STATE } from "shared/actions";
-import keyboard from "shared/utils/keyboard";
+
+import hydrateState from "../utils/hydrateState";
+import { REPLACE_STATE } from "../actions";
+import keyboard from "../utils/keyboard";
 
 class _ImportExport extends React.Component {
   render() {

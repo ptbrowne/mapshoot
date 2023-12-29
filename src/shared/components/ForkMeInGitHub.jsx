@@ -1,3 +1,5 @@
+import React from 'react'
+
 const style = {
   fill: "transparent",
   color: "#fff",

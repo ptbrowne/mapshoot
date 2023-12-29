@@ -1,6 +1,8 @@
 import _ from "lodash/core";
 import { combineReducers, createStore, applyMiddleware } from "redux";
-import hydrateState from "shared/utils/hydrateState";
+import undoable, { includeAction } from "redux-undo";
+
+import hydrateState from "./utils/hydrateState";
 
 import {
   ADD_CAMERA,
@@ -16,10 +18,9 @@ import {
   REPLACE_STATE,
   SET_MAP_ZOOM,
   SET_MAP_VIEW
-} from "shared/actions";
+} from "./actions";
+import { removeAtIndex, findAndUpdate } from "./utils/immutable";
 
-import undoable, { includeAction } from "redux-undo";
-import { removeAtIndex, findAndUpdate } from "shared/utils/immutable";
 
 const listReducer = function({ add, remove, reset, item }) {
   return function(state, action) {
