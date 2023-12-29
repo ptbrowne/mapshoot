@@ -48,7 +48,7 @@ const getInitialStore = function() {
     selectedCamera: null,
     selectedCameraType: null,
     settings: {
-      mapboxStyleURL: "mapbox://styles/ptbrowne/cko1p455r12vq18p9qhenreb1",
+      mapboxStyleURL: "mapbox://styles/mapbox/outdoors-v12",
       mapboxAccessToken:
         "pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA"
     }
