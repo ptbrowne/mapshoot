@@ -1,11 +1,11 @@
-import React from 'react'
-import _ from "lodash/core";
-import { connect } from "react-redux";
-import { ActionCreators } from "redux-undo";
+import _ from "lodash/core"
+import React from "react"
+import { connect } from "react-redux"
+import { ActionCreators } from "redux-undo"
 
 class _ActionHistory extends React.Component {
   render() {
-    const { actions } = this.props;
+    const { actions } = this.props
     return actions.length === 0 ? null : (
       <div className="panel-section">
         <h2>
@@ -18,7 +18,7 @@ class _ActionHistory extends React.Component {
           </div>
         ))}
       </div>
-    );
+    )
   }
 }
 
@@ -29,10 +29,10 @@ const ActionHistory = connect(
   dispatch => ({
     revertTo: function(index) {
       for (var i = 0; i < index; i++) {
-        dispatch(ActionCreators.undo());
+        dispatch(ActionCreators.undo())
       }
     }
   })
-)(_ActionHistory);
+)(_ActionHistory)
 
-export default ActionHistory;
+export default ActionHistory

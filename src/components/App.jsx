@@ -1,16 +1,16 @@
-import React from 'react'
+import { introJs } from "intro.js"
+import React from "react"
+import { connect } from "react-redux"
 
-import { connect } from "react-redux";
-import { introJs } from "intro.js";
-import LeafletMap from "./LeafletMap";
-import Results from "./Results";
-import Settings from "./Settings";
-import ImportExport from "./ImportExport";
-import KeyboardShortcuts from "./KeyboardShortcuts";
-import ForkMeInGitHub from "./ForkMeInGitHub";
-import CameraTypes from "./CameraTypes";
+import CameraTypes from "./CameraTypes"
+import ForkMeInGitHub from "./ForkMeInGitHub"
+import ImportExport from "./ImportExport"
+import KeyboardShortcuts from "./KeyboardShortcuts"
+import LeafletMap from "./LeafletMap"
+import Results from "./Results"
+import Settings from "./Settings"
 
-  import "../style.css";
+import "../style.css"
 
 const HelpPanelSection = ({ onClickHelp }) => {
   return (
@@ -19,8 +19,8 @@ const HelpPanelSection = ({ onClickHelp }) => {
         Help <i className="fa fa-question-circle" />
       </button>
     </div>
-  );
-};
+  )
+}
 
 const ImportExportPanelSection = () => {
   return (
@@ -34,8 +34,8 @@ const ImportExportPanelSection = () => {
       </h2>
       <ImportExport />
     </div>
-  );
-};
+  )
+}
 
 const SettingsPanelSection = () => {
   return (
@@ -50,8 +50,8 @@ const SettingsPanelSection = () => {
       </h2>
       <Settings />
     </div>
-  );
-};
+  )
+}
 
 const CameraPanelSection = () => {
   return (
@@ -65,8 +65,8 @@ const CameraPanelSection = () => {
       </h2>
       <CameraTypes />
     </div>
-  );
-};
+  )
+}
 
 class _App extends React.Component {
   render() {
@@ -104,7 +104,7 @@ class _App extends React.Component {
         </div>
         <ForkMeInGitHub />
       </div>
-    );
+    )
   }
 }
 
@@ -117,21 +117,18 @@ const mapDispatchToProps = function(dispatch, ownProps) {
     onClickHelp() {
       const drawRectangle = document.querySelector(
         ".leaflet-draw-draw-rectangle"
-      );
-      const drawEdit = document.querySelector(".leaflet-draw-edit-edit");
+      )
+      const drawEdit = document.querySelector(".leaflet-draw-edit-edit")
       drawRectangle.dataset["intro"] =
-        "Draw a camera freely with the rectangle tool";
+        "Draw a camera freely with the rectangle tool"
       drawEdit.dataset["intro"] =
-        "Select a camera then resize it with the resize tool";
+        "Select a camera then resize it with the resize tool"
 
-      introJs().start();
+      introJs().start()
     }
-  };
-};
+  }
+}
 
-const App = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(_App);
+const App = connect(mapStateToProps, mapDispatchToProps)(_App)
 
-export default App;
+export default App

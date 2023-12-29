@@ -1,41 +1,42 @@
-import React from 'react'
+import React from "react"
+import { connect } from "react-redux"
 
-import { connect } from "react-redux";
-import { UPDATE_SETTINGS } from "../actions";
-import utils from "./utils";
+import { UPDATE_SETTINGS } from "../actions"
+
+import utils from "./utils"
 
 class _Settings extends React.Component {
   constructor(props) {
-    super(props);
-    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings;
-    this.state = { mapboxStyleURL, mapboxAccessToken };
+    super(props)
+    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings
+    this.state = { mapboxStyleURL, mapboxAccessToken }
   }
 
   handleUpdateSettings(settingName, ev) {
     this.props.onUpdateSettings({
       mapboxStyleURL: this.state.mapboxStyleURL,
       mapboxAccessToken: this.state.mapboxAccessToken
-    });
+    })
   }
 
   handleChangeSetting(settingName, ev) {
     this.setState({
       [settingName]: ev.target.value
-    });
+    })
   }
 
   render() {
-    const initialSettings = this.props.settings;
-    const { mapboxStyleURL, mapboxAccessToken } = this.state;
+    const initialSettings = this.props.settings
+    const { mapboxStyleURL, mapboxAccessToken } = this.state
 
     const {
       mapboxStyleURL: mapboxStyleURLSetting,
       mapboxAccessToken: mapboxAccessTokenSetting
-    } = this.props.settings;
+    } = this.props.settings
     const shouldSave =
       mapboxStyleURL !== mapboxStyleURLSetting ||
-      mapboxAccessToken !== mapboxAccessTokenSetting;
-    const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL);
+      mapboxAccessToken !== mapboxAccessTokenSetting
+    const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL)
 
     return (
       <div>
@@ -53,7 +54,7 @@ class _Settings extends React.Component {
         />
         <br />
         <a
-          target='_blank'
+          target="_blank"
           href={
             !mapboxLogin
               ? "https://studio.mapbox.com/styles/"
@@ -72,28 +73,25 @@ class _Settings extends React.Component {
           </button>
         ) : null}
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = function(state) {
-  state = state.present;
+  state = state.present
   return {
     settings: state.settings
-  };
-};
+  }
+}
 
 const mapDispatchToProps = function(dispatch) {
   return {
     onUpdateSettings: function(update) {
-      dispatch({ type: UPDATE_SETTINGS, update });
+      dispatch({ type: UPDATE_SETTINGS, update })
     }
-  };
-};
+  }
+}
 
-const Settings = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(_Settings);
+const Settings = connect(mapStateToProps, mapDispatchToProps)(_Settings)
 
-export default Settings;
+export default Settings

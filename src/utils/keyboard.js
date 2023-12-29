@@ -8,4 +8,4 @@ export default {
   S: 83,
   Y: 89,
   Z: 90
-};
+}

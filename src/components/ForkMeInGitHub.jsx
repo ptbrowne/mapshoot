@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 const style = {
   fill: "transparent",
@@ -8,7 +8,7 @@ const style = {
   border: "0",
   right: "0",
   transform: "rotate(-45deg)"
-};
+}
 
 export default function() {
   return (
@@ -59,5 +59,5 @@ export default function() {
         }
     `}</style>
     </div>
-  );
+  )
 }

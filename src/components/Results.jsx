@@ -1,9 +1,7 @@
-import React from "react";
-import _ from "lodash/core";
-import { connect } from "react-redux";
-import { ActionTypes } from "redux-undo";
-import ActionHistory from "../components/ActionHistory";
-import { CameraType } from "../models";
+import _ from "lodash/core"
+import React from "react"
+import { connect } from "react-redux"
+import { ActionTypes } from "redux-undo"
 
 import {
   CLEAR_CAMERAS,
@@ -12,13 +10,16 @@ import {
   ADD_CAMERA_TYPE,
   REMOVE_CAMERA,
   SET_MAP_VIEW
-} from "../actions";
-import utils from './utils'
+} from "../actions"
+import ActionHistory from "../components/ActionHistory"
+import { CameraType } from "../models"
+
+import utils from "./utils"
 
 class _Snapshots extends React.Component {
   render() {
-    const { cameras, onClearCameras, onSelectCamera } = this.props;
-    const { mapboxStyleURL, mapboxAccessToken } = this.props;
+    const { cameras, onClearCameras, onSelectCamera } = this.props
+    const { mapboxStyleURL, mapboxAccessToken } = this.props
     const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL)
     return cameras.length ? (
       <div className="panel-section">
@@ -37,7 +38,7 @@ class _Snapshots extends React.Component {
                 mapboxAccessToken
               )}
             />
-          );
+          )
         })}
         <div className="section__actions">
           <button className="btn--red" onClick={onClearCameras}>
@@ -45,52 +46,52 @@ class _Snapshots extends React.Component {
           </button>
         </div>
       </div>
-    ) : null;
+    ) : null
   }
 }
 
 const Snapshots = connect(
   state => {
-    state = state.present;
-    const { settings, cameras } = state;
+    state = state.present
+    const { settings, cameras } = state
     return {
       cameras: cameras,
       mapboxStyleURL: settings.mapboxStyleURL,
       mapboxAccessToken: settings.mapboxAccessToken
-    };
+    }
   },
   dispatch => ({
     onClearCameras: function() {
-      dispatch({ type: CLEAR_CAMERAS });
+      dispatch({ type: CLEAR_CAMERAS })
     },
 
     onSelectCamera: function(camera) {
-      dispatch({ type: SELECT_CAMERA, camera });
+      dispatch({ type: SELECT_CAMERA, camera })
     }
   })
-)(_Snapshots);
+)(_Snapshots)
 
 class _SelectedCamera extends React.Component {
   constructor() {
-    super();
-    this.handleClickZoom = this.handleClickZoom.bind(this);
+    super()
+    this.handleClickZoom = this.handleClickZoom.bind(this)
   }
 
   handleClickZoom() {
-    const { selectedCamera } = this.props;
-    this.props.onChangeZoom(selectedCamera.zoom);
+    const { selectedCamera } = this.props
+    this.props.onChangeZoom(selectedCamera.zoom)
   }
 
   render() {
-    const { selectedCamera } = this.props;
+    const { selectedCamera } = this.props
     const {
       onSelectCamera,
       onRemoveCamera,
       onCreateCameraTypeFromCamera,
       onViewZoom,
       onSetZoom
-    } = this.props;
-    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings;
+    } = this.props
+    const { mapboxStyleURL, mapboxAccessToken } = this.props.settings
     const { mapboxLogin, mapboxStyleId } = utils.parseStyleURL(mapboxStyleURL)
     const url = selectedCamera
       ? selectedCamera.getRenderString(
@@ -98,10 +99,10 @@ class _SelectedCamera extends React.Component {
           mapboxStyleId,
           mapboxAccessToken
         )
-      : null;
+      : null
     const rightZoom = selectedCamera
       ? selectedCamera.zoom == this.props.mapZoom - 1
-      : false;
+      : false
     return selectedCamera ? (
       <div className="panel-section">
         <h2>
@@ -156,35 +157,35 @@ class _SelectedCamera extends React.Component {
           </button>
         </div>
       </div>
-    ) : null;
+    ) : null
   }
 }
 
 const mapStateToProps = function(state) {
-  state = state.present;
+  state = state.present
 
-  const cameras = state.cameras;
-  const selectedCamera = _.find(cameras, x => x.id == state.selectedCameraId);
+  const cameras = state.cameras
+  const selectedCamera = _.find(cameras, x => x.id == state.selectedCameraId)
   return {
     cameras: state.cameras,
     selectedCamera: selectedCamera,
     mapZoom: state.map.zoom,
     settings: state.settings
-  };
-};
+  }
+}
 
 const mapDispatchToProps = function(dispatch) {
   return {
     onUndo: function() {
-      dispatch({ type: ActionTypes.UNDO });
+      dispatch({ type: ActionTypes.UNDO })
     },
 
     onSelectCamera: function(camera) {
-      dispatch({ type: SELECT_CAMERA, camera });
+      dispatch({ type: SELECT_CAMERA, camera })
     },
 
     onRemoveCamera: function(camera) {
-      dispatch({ type: REMOVE_CAMERA, camera });
+      dispatch({ type: REMOVE_CAMERA, camera })
     },
 
     onViewZoom: function(camera) {
@@ -193,14 +194,14 @@ const mapDispatchToProps = function(dispatch) {
         type: SET_MAP_VIEW,
         center: camera.latlng,
         zoom: camera.zoom + 1
-      });
+      })
     },
 
     onSetZoom: function(camera, zoom) {
       const update = {
         zoom: zoom - 1
-      };
-      dispatch({ type: UPDATE_CAMERA, camera, update });
+      }
+      dispatch({ type: UPDATE_CAMERA, camera, update })
     },
 
     onCreateCameraTypeFromCamera: function(camera) {
@@ -208,16 +209,16 @@ const mapDispatchToProps = function(dispatch) {
         widthInMillimeters: camera.widthInMillimeters,
         heightInMillimeters: camera.heightInMillimeters,
         defaultZoom: camera.zoom
-      });
-      dispatch({ type: ADD_CAMERA_TYPE, cameraType });
+      })
+      dispatch({ type: ADD_CAMERA_TYPE, cameraType })
     }
-  };
-};
+  }
+}
 
 const SelectedCamera = connect(
   mapStateToProps,
   mapDispatchToProps
-)(_SelectedCamera);
+)(_SelectedCamera)
 
 class _Results extends React.Component {
   render() {
@@ -227,13 +228,13 @@ class _Results extends React.Component {
         <SelectedCamera />
         {false ? <ActionHistory /> : null}
       </div>
-    );
+    )
   }
 }
 
 const Results = connect(
   state => ({ mapZoom: state.present.map.zoom }),
   null
-)(_Results);
+)(_Results)
 
-export default Results;
+export default Results

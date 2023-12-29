@@ -1,6 +1,7 @@
-import HotApp from "./HotApp";
-import { render } from "react-dom";
-import React from 'react'
+import React from "react"
+import { render } from "react-dom"
 
-const node = document.getElementById("react-view");
-render(<HotApp />, node);
+import HotApp from "./HotApp"
+
+const node = document.getElementById("react-view")
+render(<HotApp />, node)

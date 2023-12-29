@@ -1,8 +1,6 @@
-import _ from "lodash/core";
-import { combineReducers, createStore, applyMiddleware } from "redux";
-import undoable, { includeAction } from "redux-undo";
-
-import hydrateState from "./utils/hydrateState";
+import _ from "lodash/core"
+import { combineReducers, createStore, applyMiddleware } from "redux"
+import undoable, { includeAction } from "redux-undo"
 
 import {
   ADD_CAMERA,
@@ -18,27 +16,27 @@ import {
   REPLACE_STATE,
   SET_MAP_ZOOM,
   SET_MAP_VIEW
-} from "./actions";
-import { removeAtIndex, findAndUpdate } from "./utils/immutable";
-
+} from "./actions"
+import hydrateState from "./utils/hydrateState"
+import { removeAtIndex, findAndUpdate } from "./utils/immutable"
 
 const listReducer = function({ add, remove, reset, item }) {
   return function(state, action) {
     switch (action.type) {
       case add:
-        return [...state, action[item]];
+        return [...state, action[item]]
       case remove:
-        const i = state.indexOf(action[item]);
-        return removeAtIndex(state, i);
+        const i = state.indexOf(action[item])
+        return removeAtIndex(state, i)
       case reset:
-        return [];
+        return []
     }
 
-    return state;
-  };
-};
+    return state
+  }
+}
 
-const LS_KEY = "state";
+const LS_KEY = "state"
 
 const getInitialStore = function() {
   const init = {
@@ -52,38 +50,38 @@ const getInitialStore = function() {
       mapboxAccessToken:
         "pk.eyJ1IjoicHRicm93bmUiLCJhIjoiUFNqTUZhUSJ9.2STzGXRBFhzxCQG3ZdseMA"
     }
-  };
-  const store = localStorage.getItem(LS_KEY);
+  }
+  const store = localStorage.getItem(LS_KEY)
   if (!store) {
-    return init;
+    return init
   } else {
     try {
-      var state = JSON.parse(store).present;
+      var state = JSON.parse(store).present
       if (!state) {
-        return init;
+        return init
       }
-      state = _.assignIn(init, state);
-      hydrateState(state);
-      return state;
+      state = _.assignIn(init, state)
+      hydrateState(state)
+      return state
     } catch (e) {
-      localStorage.removeItem(LS_KEY);
-      console.warn("Error while loading previous state", e);
-      return init;
+      localStorage.removeItem(LS_KEY)
+      console.warn("Error while loading previous state", e)
+      return init
     }
   }
-};
+}
 
-const initialStore = getInitialStore();
+const initialStore = getInitialStore()
 
 const composeReducers = function(/* reducers */) {
-  const reducers = _.slice(arguments);
+  const reducers = _.slice(arguments)
   return function(state, action) {
     _.each(reducers, function(r) {
-      state = r(state, action);
-    });
-    return state;
-  };
-};
+      state = r(state, action)
+    })
+    return state
+  }
+}
 
 const cameras = composeReducers(
   listReducer({
@@ -95,17 +93,17 @@ const cameras = composeReducers(
   function(state = initialStore.cameras, action) {
     switch (action.type) {
       case UPDATE_CAMERA:
-        const { camera, update } = action;
-        const finder = x => x.id == camera.id;
+        const { camera, update } = action
+        const finder = x => x.id == camera.id
         const updater = function(camera) {
-          return camera.imUpdate(update);
-        };
-        return findAndUpdate(state, finder, updater);
+          return camera.imUpdate(update)
+        }
+        return findAndUpdate(state, finder, updater)
     }
 
-    return state;
+    return state
   }
-);
+)
 
 const cameraTypes = composeReducers(
   listReducer({
@@ -115,28 +113,28 @@ const cameraTypes = composeReducers(
     item: "cameraType"
   }),
   function(state = initialStore.cameraTypes, action) {
-    return state;
+    return state
   }
-);
+)
 
-const COMPIEGNE_LAT_LNG = [49.41794, 2.82606];
-const initialMapState = { zoom: 18, center: COMPIEGNE_LAT_LNG };
+const COMPIEGNE_LAT_LNG = [49.41794, 2.82606]
+const initialMapState = { zoom: 18, center: COMPIEGNE_LAT_LNG }
 const map = function(state = initialStore.map || initialMapState, action) {
   switch (action.type) {
     case SET_MAP_ZOOM:
-      return Object.assign({}, state, { zoom: action.zoom });
+      return Object.assign({}, state, { zoom: action.zoom })
     case SET_MAP_VIEW:
-      const update = {};
+      const update = {}
       if (action.zoom) {
-        update.zoom = action.zoom;
+        update.zoom = action.zoom
       }
       if (action.center) {
-        update.center = action.center;
+        update.center = action.center
       }
-      return Object.assign({}, state, update);
+      return Object.assign({}, state, update)
   }
-  return state;
-};
+  return state
+}
 
 const selectedCameraId = function(
   state = initialStore.selectedCamera ? initialStore.selectedCamera.id : null,
@@ -144,12 +142,12 @@ const selectedCameraId = function(
 ) {
   switch (action.type) {
     case SELECT_CAMERA:
-      return action.camera ? action.camera.id : null;
+      return action.camera ? action.camera.id : null
     case REMOVE_CAMERA:
-      return null;
+      return null
   }
-  return state;
-};
+  return state
+}
 
 const selectedCameraType = function(
   state = initialStore.selectedCameraType,
@@ -157,20 +155,20 @@ const selectedCameraType = function(
 ) {
   switch (action.type) {
     case SELECT_CAMERA_TYPE:
-      return action.cameraType;
+      return action.cameraType
     case REMOVE_CAMERA_TYPE:
-      return null;
+      return null
   }
-  return state;
-};
+  return state
+}
 
 const settings = function(state = initialStore.settings, action) {
   switch (action.type) {
     case UPDATE_SETTINGS:
-      return Object.assign({}, state, action.update);
+      return Object.assign({}, state, action.update)
   }
-  return state;
-};
+  return state
+}
 
 const undoableActions = [
   ADD_CAMERA_TYPE,
@@ -181,14 +179,14 @@ const undoableActions = [
   CLEAR_CAMERA_TYPES,
   UPDATE_CAMERA,
   REPLACE_STATE
-];
+]
 
 const actions = function(state = [], action) {
   if (undoableActions.indexOf(action.type) > -1) {
-    return [{ type: action.type }, ...state].slice(0, 10);
+    return [{ type: action.type }, ...state].slice(0, 10)
   }
-  return state;
-};
+  return state
+}
 
 const combinedReducers = combineReducers({
   cameras,
@@ -198,38 +196,38 @@ const combinedReducers = combineReducers({
   selectedCameraType,
   settings,
   actions
-});
+})
 
 const replaceStateReducer = function(state, action) {
   if (action.type == REPLACE_STATE) {
-    return action.state;
+    return action.state
   }
-  return state;
-};
+  return state
+}
 
-var reducer = composeReducers(replaceStateReducer, combinedReducers);
+var reducer = composeReducers(replaceStateReducer, combinedReducers)
 
 reducer = undoable(reducer, {
   filter: includeAction(undoableActions)
-});
+})
 
 const save = _store => next => action => {
-  const result = next(action);
-  const state = store.getState();
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
-  return result;
-};
+  const result = next(action)
+  const state = store.getState()
+  localStorage.setItem(LS_KEY, JSON.stringify(state))
+  return result
+}
 
 const logger = store => next => action => {
-  console.group(action.type);
-  console.log("Dispatching", action);
-  console.log("  Previous state", store.getState().present);
-  let result = next(action);
-  console.log("  Next state", store.getState().present);
-  console.groupEnd(action.type);
-  return result;
-};
+  console.group(action.type)
+  console.log("Dispatching", action)
+  console.log("  Previous state", store.getState().present)
+  let result = next(action)
+  console.log("  Next state", store.getState().present)
+  console.groupEnd(action.type)
+  return result
+}
 
-const store = createStore(reducer, applyMiddleware(logger, save));
+const store = createStore(reducer, applyMiddleware(logger, save))
 
-export default store;
+export default store
