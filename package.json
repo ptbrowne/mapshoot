@@ -21,7 +21,8 @@
     "webpack-dev-server": "^3.7.2"
   },
   "scripts": {
-    "build": "vite build -c vite.config.js src/",
+    "lint": "eslint src/",
+    "build": "yarn lint; vite build -c vite.config.js src/",
     "build-commit-push": "npm run build; git add dist; git commit -m 'build'; git push origin master",
     "start": "vite -c vite.config.js src/",
     "test": "karma start karma.conf.js --reporters dots,notify,html",

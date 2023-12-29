@@ -26,8 +26,7 @@ const listReducer = function({ add, remove, reset, item }) {
       case add:
         return [...state, action[item]]
       case remove:
-        const i = state.indexOf(action[item])
-        return removeAtIndex(state, i)
+        return removeAtIndex(state, state.indexOf(action[item]))
       case reset:
         return []
     }
@@ -91,16 +90,14 @@ const cameras = composeReducers(
     item: "camera"
   }),
   function(state = initialStore.cameras, action) {
-    switch (action.type) {
-      case UPDATE_CAMERA:
-        const { camera, update } = action
-        const finder = x => x.id == camera.id
-        const updater = function(camera) {
-          return camera.imUpdate(update)
-        }
-        return findAndUpdate(state, finder, updater)
+    if (action.type === UPDATE_CAMERA) {
+      const { camera, update } = action
+      const finder = x => x.id == camera.id
+      const updater = function(camera) {
+        return camera.imUpdate(update)
+      }
+      return findAndUpdate(state, finder, updater)
     }
-
     return state
   }
 )
@@ -120,11 +117,12 @@ const cameraTypes = composeReducers(
 const COMPIEGNE_LAT_LNG = [49.41794, 2.82606]
 const initialMapState = { zoom: 18, center: COMPIEGNE_LAT_LNG }
 const map = function(state = initialStore.map || initialMapState, action) {
+  let update
   switch (action.type) {
     case SET_MAP_ZOOM:
       return Object.assign({}, state, { zoom: action.zoom })
     case SET_MAP_VIEW:
-      const update = {}
+      update = {}
       if (action.zoom) {
         update.zoom = action.zoom
       }

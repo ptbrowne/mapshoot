@@ -23,8 +23,7 @@ const findAndUpdate = function(arr, finder, updater) {
     }
     return replaceAtIndex(arr, i, updated)
   } else {
-    throw new Error("Could not find")
-    return arr
+    throw new Error("Could not find element")
   }
 }
 
